@@ -2,7 +2,7 @@
 import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import Store from 'electron-store';
-import { isDebug, getAssetsPath, getHtmlPath, getPreloadPath, installExtensions } from './utils';
+import { isDebug, getAssetsPath, getHtmlPath, getPreloadPath } from './utils';
 import menu from './menu';
 import './updater';
 
@@ -25,12 +25,6 @@ function createWindow() {
 
   /* AUTO UPDATER INVOKE */
   autoUpdater.checkForUpdatesAndNotify();
-
-  /* DEBUG DEVTOOLS */
-  if (isDebug) {
-    mainWindow.webContents.openDevTools(); // ELECTRON DEVTOOLS
-    installExtensions(); // REACT DEVTOOLS INSTALLER
-  }
 
   /* URLs OPEN IN DEFAULT BROWSER */
   mainWindow.webContents.setWindowOpenHandler((data) => {

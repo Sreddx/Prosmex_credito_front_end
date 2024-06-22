@@ -1,0 +1,20 @@
+.alta-cliente-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.alta-cliente-form input {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.alta-cliente-form button {
+  padding: 10px 20px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
