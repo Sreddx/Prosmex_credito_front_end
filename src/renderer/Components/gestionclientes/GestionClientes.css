@@ -1,18 +1,17 @@
-.alta-cliente-form-container {
+.gestion-clientes-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 50px;
 }
 
-.alta-cliente-form input {
+.gestion-clientes-container input {
   margin: 10px;
   padding: 10px;
   width: 200px;
 }
 
-.alta-cliente-form button,
-.back-button {
+.gestion-clientes-container button {
   padding: 10px 20px;
   margin: 10px;
   color: white;
@@ -20,7 +19,7 @@
   cursor: pointer;
 }
 
-.alta-cliente-form button {
+.gestion-clientes-container button:first-of-type {
   background-color: #17a2b8;
 }
 

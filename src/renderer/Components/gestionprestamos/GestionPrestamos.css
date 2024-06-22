@@ -1,0 +1,46 @@
+.gestion-prestamos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.gestion-prestamos-container input {
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+}
+
+.gestion-prestamos-container button {
+  padding: 10px 20px;
+  margin: 10px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.gestion-prestamos-container button:first-of-type {
+  background-color: #28a745;
+}
+
+.back-button {
+  background-color: #007bff;
+}
+
+.prestamos-table {
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+.prestamos-table th,
+.prestamos-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.prestamos-table th {
+  background-color: #f2f2f2;
+  color: black;
+}

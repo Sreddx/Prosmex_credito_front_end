@@ -9,7 +9,13 @@ function Dashboard() {
       <Link to="/alta-cliente" className="dashboard-link">
         Alta Cliente
       </Link>
-      {/* Añadir más enlaces según sea necesario */}
+      <Link to="/gestion-clientes" className="dashboard-link">
+        Gestión de Clientes
+      </Link>
+      <Link to="/gestion-prestamos" className="dashboard-link">
+        Gestión de Préstamos
+      </Link>
+      {/* Agregar más enlaces según sea necesario */}
     </div>
   );
 }
