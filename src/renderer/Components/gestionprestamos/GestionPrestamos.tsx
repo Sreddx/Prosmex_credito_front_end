@@ -19,7 +19,7 @@ function GestionPrestamos() {
     e.preventDefault();
     const nuevoPrestamo: Prestamo = {
       id: prestamos.length + 1,
-      clienteId: parseInt(clienteId),
+      clienteId: parseInt(clienteId, 10),
       monto: parseFloat(monto),
     };
     setPrestamos([...prestamos, nuevoPrestamo]);
@@ -49,7 +49,6 @@ function GestionPrestamos() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>ID del Cliente</th>
             <th>Monto</th>
           </tr>
         </thead>
@@ -57,7 +56,6 @@ function GestionPrestamos() {
           {prestamos.map((prestamo) => (
             <tr key={prestamo.id}>
               <td>{prestamo.id}</td>
-              <td>{prestamo.clienteId}</td>
               <td>{prestamo.monto}</td>
             </tr>
           ))}

@@ -17,7 +17,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={[]}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -25,7 +25,7 @@ function App() {
           <Route
             path="/alta-cliente"
             element={
-              <ProtectedRoute role="admin">
+              <ProtectedRoute requiredPermissions={[1]}>
                 <AltaCliente />
               </ProtectedRoute>
             }
@@ -33,7 +33,7 @@ function App() {
           <Route
             path="/gestion-clientes"
             element={
-              <ProtectedRoute role="admin">
+              <ProtectedRoute requiredPermissions={[1]}>
                 <GestionClientes />
               </ProtectedRoute>
             }
@@ -41,11 +41,12 @@ function App() {
           <Route
             path="/gestion-prestamos"
             element={
-              <ProtectedRoute role="user">
+              <ProtectedRoute requiredPermissions={[2]}>
                 <GestionPrestamos />
               </ProtectedRoute>
             }
           />
+          {/* Añadir más rutas protegidas según sea necesario */}
         </Routes>
       </Router>
     </AuthProvider>

@@ -4,17 +4,18 @@
 export interface User {
   username: string;
   role: string;
+  permissions: number[]; // Permisos del usuario
 }
 
 export interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => void;
+  login: (username: string, password: string, role: string) => void;
   logout: () => void;
 }
 
 export interface ProtectedRouteProps {
   children: JSX.Element;
-  role?: string;
+  requiredPermissions: number[]; // Permisos requeridos para la ruta
 }
 
 export interface AuthProviderProps {

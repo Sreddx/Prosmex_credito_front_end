@@ -9,8 +9,8 @@ import './updater';
 function createWindow() {
   const mainWindow = new BrowserWindow({
     icon: getAssetsPath('icon.ico'),
-    width: 1100,
-    height: 750,
+    width: 1920,
+    height: 1080,
     webPreferences: {
       devTools: isDebug,
       preload: getPreloadPath('preload.js'),
@@ -21,7 +21,7 @@ function createWindow() {
   mainWindow.loadURL(getHtmlPath('index.html'));
 
   /* MENU BUILDER */
-  Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(null);
 
   /* AUTO UPDATER INVOKE */
   autoUpdater.checkForUpdatesAndNotify();

@@ -1,21 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Menu from '../menu/Menu';
+import { useAuth } from '../../context/AuthContext';
 import './Dashboard.css';
 
 function Dashboard() {
+  const { logout } = useAuth();
+
   return (
     <div className="dashboard-container">
       <h1>Dashboard</h1>
-      <Link to="/alta-cliente" className="dashboard-link">
-        Alta Cliente
-      </Link>
-      <Link to="/gestion-clientes" className="dashboard-link">
-        Gestión de Clientes
-      </Link>
-      <Link to="/gestion-prestamos" className="dashboard-link">
-        Gestión de Préstamos
-      </Link>
-      {/* Agregar más enlaces según sea necesario */}
+      <Menu />
+      <button type="button" className="logout-button" onClick={logout}>
+        Cerrar Sesión
+      </button>
     </div>
   );
 }
