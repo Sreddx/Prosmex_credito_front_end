@@ -1,46 +1,69 @@
-.gestion-prestamos-container {
+.gestion-prestamos-form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin: 20px;
 }
 
-.gestion-prestamos-container input {
-  margin: 10px;
-  padding: 10px;
-  width: 200px;
+.gestion-prestamos-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  max-width: 1000px;
+  width: 100%;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.gestion-prestamos-container button {
-  padding: 10px 20px;
-  margin: 10px;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.gestion-prestamos-container button:first-of-type {
-  background-color: #28a745;
-}
-
-.back-button {
-  background-color: #007bff;
-}
-
-.prestamos-table {
-  margin-top: 20px;
-  border-collapse: collapse;
-  width: 80%;
-}
-
-.prestamos-table th,
-.prestamos-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+.gestion-prestamos-form h1 {
+  grid-column: 1 / -1;
   text-align: center;
 }
 
-.prestamos-table th {
-  background-color: #f2f2f2;
-  color: black;
+.gestion-prestamos-form input[type="text"],
+.gestion-prestamos-form input[type="number"],
+.gestion-prestamos-form input[type="date"],
+.gestion-prestamos-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
+}
+
+.gestion-prestamos-form label {
+  display: flex;
+  flex-direction: column;
+}
+
+.gestion-prestamos-form button {
+  grid-column: 1 / -1;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+}
+
+.gestion-prestamos-form button:hover {
+  background: #0056b3;
+}
+
+.back-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.back-button:hover {
+  background: #218838;
 }
