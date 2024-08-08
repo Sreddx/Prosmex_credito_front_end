@@ -4,7 +4,7 @@ export const menus = [
     actions: [
       { name: 'Alta de Cliente', permission: 1, route: '/alta-cliente' },
       { name: 'Listado de Clientes', permission: 1, route: '/gestion-clientes' },
-      //{ name: 'Editar información de Cliente', permission: 1, route: '/editar-cliente' },
+      //{ name: 'Editar información de Cliente', permission: 1, route: '/editar-cliente/:id' },
     ],
   },
   {
@@ -27,7 +27,7 @@ export const menus = [
     name: 'Usuarios',
     actions: [
       //{ name: 'Editar Información', permission: 8 },
-      { name: 'Crear Usuario', permission: 9 },
+      { name: 'Crear Usuario', permission: 9, route: '/creacion-usuario' },
       { name: 'Dar de Baja Usuario', permission: 10 },
     ],
   },

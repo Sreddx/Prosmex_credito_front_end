@@ -6,6 +6,7 @@ import AltaCliente from './Components/altacliente/AltaCliente';
 import GestionClientes from './Components/gestionclientes/GestionClientes';
 import GestionPrestamos from './Components/gestionprestamos/GestionPrestamos';
 import EdicionClientes from './Components/edicioncliente/EdicionClientes';
+import CreacionUsuario from './Components/creacionusuario/CreacionUsuario';
 import ProtectedRoute from './Components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -52,6 +53,14 @@ function App() {
             element={
               <ProtectedRoute requiredPermissions={[1]}>
                 <EdicionClientes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/creacion-usuario"
+            element={
+              <ProtectedRoute requiredPermissions={[1]}>
+                <CreacionUsuario />
               </ProtectedRoute>
             }
           />
