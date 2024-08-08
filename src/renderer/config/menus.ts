@@ -28,16 +28,16 @@ export const menus = [
     actions: [
       //{ name: 'Editar Información', permission: 8 },
       { name: 'Crear Usuario', permission: 9, route: '/creacion-usuario' },
-      { name: 'Dar de Baja Usuario', permission: 10 },
+      { name: 'Dar de Baja Usuario', permission: 10, route: '/baja-usuario' },
     ],
   },
   {
     name: 'Administración',
     actions: [
-      { name: 'Creación de Préstamo Mayor a $5000', permission: 11 },
-      { name: 'Eliminar Crédito', permission: 12 },
-      { name: 'Asignar Titular a Grupo', permission: 13 },
-      { name: 'Asignar Grupo a Ruta', permission: 14 },
+      //{ name: 'Creación de Préstamo Mayor a $5000', permission: 11 },
+      { name: 'Eliminar Préstamo', permission: 12, route: '/baja-prestamo' },
+      { name: 'Asignar Titular a Grupo', permission: 13, route: '/asignacion-titular-grupo' },
+      { name: 'Asignar Grupo a Ruta', permission: 14, route: '/asignacion-grupo-ruta' },
     ],
   },
 ];

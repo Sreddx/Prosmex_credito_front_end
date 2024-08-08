@@ -7,6 +7,10 @@ import GestionClientes from './Components/gestionclientes/GestionClientes';
 import GestionPrestamos from './Components/gestionprestamos/GestionPrestamos';
 import EdicionClientes from './Components/edicioncliente/EdicionClientes';
 import CreacionUsuario from './Components/creacionusuario/CreacionUsuario';
+import BajaUsuario from './Components/bajausuario/BajaUsuario';
+import BajaPrestamo from './Components/bajaprestamo/BajaPrestamo';
+import AsignacionTitularGrupo from './Components/asignaciontitulargrupo/AsignacionTitularGrupo';
+import AsignacionGrupoRuta from './Components/asignaciongruporuta/AsignacionGrupoRuta';
 import ProtectedRoute from './Components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -59,8 +63,40 @@ function App() {
           <Route
             path="/creacion-usuario"
             element={
-              <ProtectedRoute requiredPermissions={[1]}>
+              <ProtectedRoute requiredPermissions={[3]}>
                 <CreacionUsuario />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/baja-usuario"
+            element={
+              <ProtectedRoute requiredPermissions={[3]}>
+                <BajaUsuario />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/baja-prestamo"
+            element={
+              <ProtectedRoute requiredPermissions={[2]}>
+                <BajaPrestamo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/asignacion-titular-grupo"
+            element={
+              <ProtectedRoute requiredPermissions={[3]}>
+                <AsignacionTitularGrupo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/asignacion-grupo-ruta"
+            element={
+              <ProtectedRoute requiredPermissions={[3]}>
+                <AsignacionGrupoRuta />
               </ProtectedRoute>
             }
           />
