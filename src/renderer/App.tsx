@@ -5,6 +5,7 @@ import Dashboard from './Components/dashboard/Dashboard';
 import AltaCliente from './Components/altacliente/AltaCliente';
 import GestionClientes from './Components/gestionclientes/GestionClientes';
 import GestionPrestamos from './Components/gestionprestamos/GestionPrestamos';
+import EdicionClientes from './Components/edicioncliente/EdicionClientes';
 import ProtectedRoute from './Components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -43,6 +44,14 @@ function App() {
             element={
               <ProtectedRoute requiredPermissions={[2]}>
                 <GestionPrestamos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/editar-cliente/:id"
+            element={
+              <ProtectedRoute requiredPermissions={[1]}>
+                <EdicionClientes />
               </ProtectedRoute>
             }
           />

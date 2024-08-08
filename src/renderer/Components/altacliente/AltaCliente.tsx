@@ -13,7 +13,6 @@ function AltaCliente() {
   const [estadoCivil, setEstadoCivil] = useState('');
   const [numHijos, setNumHijos] = useState(0);
   const [propiedad, setPropiedad] = useState('');
-  const [semilla, setSemilla] = useState(0);
   const [grupoId, setGrupoId] = useState('');
   const navigate = useNavigate();
 
@@ -29,7 +28,6 @@ function AltaCliente() {
       estadoCivil,
       numHijos,
       propiedad,
-      semilla,
       grupoId,
     };
     try {
@@ -127,15 +125,6 @@ function AltaCliente() {
           <option value="rentada">Rentada</option>
           <option value="prestada">Prestada</option>
         </select>
-        <label>
-          Semilla
-          <input
-            type="number"
-            value={semilla}
-            onChange={(e) => setSemilla(Number(e.target.value))}
-            required
-          />
-        </label>
         <input
           type="text"
           placeholder="Grupo ID"

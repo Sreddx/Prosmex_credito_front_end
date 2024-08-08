@@ -2,27 +2,41 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin: 20px;
 }
 
-.gestion-clientes-container input {
-  margin: 10px;
-  padding: 10px;
-  width: 200px;
+.gestion-clientes-table {
+  width: 90%; /* Cambia el ancho a 90% para dejar márgenes laterales */
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: left;
 }
 
-.gestion-clientes-container button {
-  padding: 10px 20px;
-  margin: 10px;
-  color: white;
-  border: none;
-  cursor: pointer;
+.gestion-clientes-table th, .gestion-clientes-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
 }
 
-.gestion-clientes-container button:first-of-type {
-  background-color: #17a2b8;
+.gestion-clientes-table th {
+  background-color: #f4f4f4;
+}
+
+.gestion-clientes-table tr:nth-of-type(even) {
+  background-color: #f9f9f9;
 }
 
 .back-button {
-  background-color: #007bff;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.back-button:hover {
+  background: #218838;
 }

@@ -1,11 +1,11 @@
-.alta-cliente-form-container {
+.edicion-cliente-form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 20px;
 }
 
-.alta-cliente-form {
+.edicion-cliente-form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
@@ -17,14 +17,14 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.alta-cliente-form h1 {
+.edicion-cliente-form h1 {
   grid-column: 1 / -1;
   text-align: center;
 }
 
-.alta-cliente-form input[type="text"],
-.alta-cliente-form input[type="number"],
-.alta-cliente-form select {
+.edicion-cliente-form input[type="text"],
+.edicion-cliente-form input[type="number"],
+.edicion-cliente-form select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -32,12 +32,12 @@
   box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho total */
 }
 
-.alta-cliente-form label {
+.edicion-cliente-form label {
   display: flex;
   flex-direction: column;
 }
 
-.alta-cliente-form button {
+.edicion-cliente-form button {
   grid-column: 1 / -1;
   padding: 10px 20px;
   border: none;
@@ -48,7 +48,7 @@
   text-align: center;
 }
 
-.alta-cliente-form button:hover {
+.edicion-cliente-form button:hover {
   background: #0056b3;
 }
 
