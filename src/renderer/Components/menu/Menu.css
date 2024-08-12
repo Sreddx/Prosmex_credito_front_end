@@ -1,24 +1,38 @@
 .menu-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-top: 20px;
-  background-color: #f0f0f0; /* Fondo gris claro */
+  align-items: stretch;
 }
 
 .menu-section {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.menu-section h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
+.menu-title {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-title::after {
+  content: "▼"; /* Indicador de que se puede desplegar */
+  font-size: 0.8em;
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+}
+
+.menu-section.open .menu-title::after {
+  transform: rotate(-180deg); /* Rota el indicador cuando se abre la sección */
 }
 
 .cards-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  gap: 8px; /* Espacio entre las tarjetas */
+  margin-left: 10px; /* Desplaza ligeramente las tarjetas hacia la derecha */
 }
 
 .card-link {
@@ -26,20 +40,21 @@
 }
 
 .card {
-  width: 200px;
-  padding: 20px;
-  background-color: #ffffff; /* Fondo blanco para las tarjetas */
+  width: 80%; /* Ocupa todo el ancho disponible del contenedor */
+  padding: 10px 12px; /* Reducido el padding para ajustar el tamaño de las tarjetas */
+  background-color: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  text-align: left;
   cursor: pointer;
   transition: transform 0.2s;
-  color: #007bff; /* Color del texto dentro de la tarjeta */
+  color: #007bff;
+  font-size: 0.9em; /* Reducción ligera del tamaño de la fuente */
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
 .card.disabled {
