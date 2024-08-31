@@ -28,8 +28,10 @@ function Dashboard() {
               <th>COB REAL</th>
               <th>PRESTAMO PAPEL</th>
               <th>PRESTAMO REAL</th>
+              <th>NUMERO DE PRESTAMOS</th> {/* Nueva columna */}
               <th>MOROSIDAD $$$</th>
               <th>MOROSIDAD %</th>
+              <th>BONO</th> {/* Nueva columna */}
               <th>% PRESTAMO</th>
               <th>SOBRANTE</th>
             </tr>
@@ -41,12 +43,14 @@ function Dashboard() {
               <td>TITULAR</td>
               <td>RUTA</td>
               <td>GRUPO 1</td>
-              <td>$2000.0</td>
-              <td>$2000.0</td>
-              <td>$5000.0</td>
-              <td>$4000.0</td>
-              <td>$0.0</td>
+              <td>2000.0</td>
+              <td>2000.0</td>
+              <td>5000.0</td>
+              <td>4000.0</td>
+              <td>10</td> {/* Ejemplo para NUMERO DE PRESTAMOS */}
               <td>0.0</td>
+              <td>0.0</td>
+              <td>500.0</td> {/* Ejemplo para BONO */}
               <td>2.0</td>
               <td>-2000.0</td>
             </tr>
@@ -56,12 +60,14 @@ function Dashboard() {
               <td>TITULAR</td>
               <td>RUTA</td>
               <td>GRUPO 2</td>
-              <td>$2500.0</td>
-              <td>$2300.0</td>
-              <td>$8000.0</td>
-              <td>$7000.0</td>
-              <td>$200.0</td>
+              <td>2500.0</td>
+              <td>2300.0</td>
+              <td>8000.0</td>
+              <td>7000.0</td>
+              <td>15</td> {/* Ejemplo para NUMERO DE PRESTAMOS */}
+              <td>200.0</td>
               <td>0.08</td>
+              <td>300.0</td> {/* Ejemplo para BONO */}
               <td>3.043478</td>
               <td>-4700.0</td>
             </tr>
@@ -71,12 +77,14 @@ function Dashboard() {
               <td>TITULAR</td>
               <td>RUTA</td>
               <td>GRUPO 3</td>
-              <td>$2000.0</td>
-              <td>$1800.0</td>
-              <td>$1500.0</td>
-              <td>$1000.0</td>
-              <td>$200.0</td>
+              <td>2000.0</td>
+              <td>1800.0</td>
+              <td>1500.0</td>
+              <td>1000.0</td>
+              <td>5</td> {/* Ejemplo para NUMERO DE PRESTAMOS */}
+              <td>200.0</td>
               <td>0.1</td>
+              <td>100.0</td> {/* Ejemplo para BONO */}
               <td>0.555556</td>
               <td>800.0</td>
             </tr>
@@ -86,12 +94,14 @@ function Dashboard() {
               <td></td>
               <td></td>
               <td></td>
-              <td>$6500.0</td>
-              <td>$6100.0</td>
-              <td>$14500.0</td>
-              <td>$12000.0</td>
-              <td>$400.0</td>
+              <td>6500.0</td>
+              <td>6100.0</td>
+              <td>14500.0</td>
+              <td>12000.0</td>
+              <td>30</td> {/* Ejemplo para NUMERO DE PRESTAMOS */}
+              <td>400.0</td>
               <td>0.061538</td>
+              <td>900.0</td> {/* Ejemplo para BONO */}
               <td>0.938462</td>
               <td>-5900.0</td>
             </tr>
