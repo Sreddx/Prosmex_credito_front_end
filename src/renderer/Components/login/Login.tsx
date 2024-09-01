@@ -6,22 +6,30 @@ import './Login.css';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('admin'); // Rol predeterminado como admin
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleLogin = () => {
-    login(username, password, role);
-    navigate('/dashboard');
+  const handleLogin = async () => {
+    try {
+      console.log('Attempting to log in...');
+      await login(username, password);
+      console.log('Login successful, navigating to dashboard...');
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login failed:', error);
+      setError('Failed to log in');
+    }
   };
 
   return (
     <div className="login-container">
       <h1>Prosmex</h1>
       <h2>Iniciar Sesión</h2>
+      {error && <p className="error">{error}</p>}
       <input
         type="text"
-        placeholder="Usuario"
+        placeholder="Correo"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
@@ -31,14 +39,6 @@ function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="gestor-cobranza">Gestor de Cobranza</option>
-        <option value="titular">Titular</option>
-        <option value="supervisor">Supervisor</option>
-        <option value="gerente">Gerente</option>
-        <option value="director">Director</option>
-        <option value="admin">Admin</option>
-      </select>
       <button type="button" onClick={handleLogin}>
         Login
       </button>

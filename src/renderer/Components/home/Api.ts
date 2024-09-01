@@ -1,13 +1,22 @@
-/* API LISTENERS */
-window.ipc.send('message', 'ping 🏓');
-window.ipc.receive('reply', (args) => {
-  // eslint-disable-next-line no-console
-  console.log(args);
-});
+import axios from 'axios';
 
-/* LOCAL STORAGE LISTENERS */
-window.ipc.set('unicorn', 'Hello World! 🦄');
-// eslint-disable-next-line no-console
-console.log(window.ipc.get('unicorn'));
+const backendUrl = 'http://localhost:5000';
 
-export {};
+// eslint-disable-next-line import/prefer-default-export
+export const loginApi = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${backendUrl}/auth/login`, {
+      email,
+      contrasena: password,
+    });
+
+    // Return the response data (which might include the token, user info, etc.)
+    return response.data;
+  } catch (error) {
+    // Handle errors, could be network issues or 401 Unauthorized etc.
+    if (axios.isAxiosError(error) && error.response) {
+      return { error: error.response.data.message || 'Login failed' };
+    }
+    return { error: 'Network or server error occurred' };
+  }
+};

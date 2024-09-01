@@ -12,14 +12,14 @@ function createWindow() {
     width: 1920,
     height: 1080,
     webPreferences: {
-      devTools: isDebug,
+      devTools: true,
       preload: getPreloadPath('preload.js'),
       // nodeIntegration: true, // NODE.JS WILL AVAILABLE IN RENDERER
     },
   });
 
   mainWindow.loadURL(getHtmlPath('index.html'));
-
+  mainWindow.webContents.openDevTools();
   /* MENU BUILDER */
   Menu.setApplicationMenu(null);
 

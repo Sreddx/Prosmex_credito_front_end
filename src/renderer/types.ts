@@ -2,17 +2,21 @@
 
 // Interfaces para la autenticación
 export interface User {
-  username: string;
-  role: string;
-  permissions: number[]; // Permisos del usuario
+  userId: number;
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
+  email: string;
+  rol: string;
+  rol_id: number;
+  permissions: number[];
 }
-
 export interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string, role: string) => void;
+  token: string | null;
+  login: (username: string, password: string) => Promise<void>;
   logout: () => void;
 }
-
 export interface ProtectedRouteProps {
   children: JSX.Element;
   requiredPermissions: number[]; // Permisos requeridos para la ruta
