@@ -46,10 +46,12 @@ export interface Cliente {
 export interface CreateClienteResponse {
   message: string;
   cliente: string; // ID del cliente creado
+  status: number;
 }
 
 export interface ErrorResponse {
   error: string;
+  status: number;
 }
 
 // Interfaces para Préstamos

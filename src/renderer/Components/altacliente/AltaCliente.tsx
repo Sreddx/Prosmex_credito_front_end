@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Cliente } from '../../types';
+import { createCliente } from '../gestionclientes/Api'; // Ajusta la ruta según tu estructura
 import './AltaCliente.css';
 
 function AltaCliente() {
@@ -20,26 +21,23 @@ function AltaCliente() {
     e.preventDefault();
     const nuevoCliente: Cliente = {
       nombre,
-      apellidoPaterno,
-      apellidoMaterno,
+      apellido_paterno: apellidoPaterno,
+      apellido_materno: apellidoMaterno,
       colonia,
       cp,
-      codigoIne,
-      estadoCivil,
-      numHijos,
+      codigo_ine: codigoIne,
+      estado_civil: estadoCivil,
+      num_hijos: numHijos,
       propiedad,
-      grupoId,
+      grupo_id: Number(grupoId),
     };
+
+    console.log('Datos del nuevo cliente:', nuevoCliente);
     try {
-      const response = await fetch('/api/clientes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nuevoCliente),
-      });
-      if (response.ok) {
+      const response = await createCliente(nuevoCliente);
+      if (response && response.status === 201) {
         console.log('Cliente dado de alta:', nuevoCliente);
+        alert('Cliente dado de alta con éxito');
         navigate('/dashboard');
       } else {
         console.error('Error al dar de alta al cliente');
@@ -53,85 +51,109 @@ function AltaCliente() {
     <div className="alta-cliente-form-container">
       <form onSubmit={handleSubmit} className="alta-cliente-form">
         <h1>Alta de Cliente</h1>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Apellido Paterno"
-          value={apellidoPaterno}
-          onChange={(e) => setApellidoPaterno(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Apellido Materno"
-          value={apellidoMaterno}
-          onChange={(e) => setApellidoMaterno(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Colonia"
-          value={colonia}
-          onChange={(e) => setColonia(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Código Postal"
-          value={cp}
-          onChange={(e) => setCp(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Código INE"
-          value={codigoIne}
-          onChange={(e) => setCodigoIne(e.target.value)}
-          required
-        />
-        <select
-          value={estadoCivil}
-          onChange={(e) => setEstadoCivil(e.target.value)}
-          required
-        >
-          <option value="">Estado Civil</option>
-          <option value="casado">Casado</option>
-          <option value="divorciado">Divorciado</option>
-          <option value="viudo">Viudo</option>
-          <option value="soltero">Soltero</option>
-        </select>
-        <label>
+        <label htmlFor="nombre">
+          Nombre
+          <input
+            id="nombre"
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+        </label>
+        <label htmlFor="apellidoPaterno">
+          Apellido Paterno
+          <input
+            id="apellidoPaterno"
+            type="text"
+            value={apellidoPaterno}
+            onChange={(e) => setApellidoPaterno(e.target.value)}
+            required
+          />
+        </label>
+        <label htmlFor="apellidoMaterno">
+          Apellido Materno
+          <input
+            id="apellidoMaterno"
+            type="text"
+            value={apellidoMaterno}
+            onChange={(e) => setApellidoMaterno(e.target.value)}
+            required
+          />
+        </label>
+        <label htmlFor="colonia">
+          Colonia
+          <input
+            id="colonia"
+            type="text"
+            value={colonia}
+            onChange={(e) => setColonia(e.target.value)}
+            required
+          />
+        </label>
+        <label htmlFor="cp">
+          Código Postal
+          <input id="cp" type="text" value={cp} onChange={(e) => setCp(e.target.value)} required />
+        </label>
+        <label htmlFor="codigoIne">
+          Código INE
+          <input
+            id="codigoIne"
+            type="text"
+            value={codigoIne}
+            onChange={(e) => setCodigoIne(e.target.value)}
+            required
+          />
+        </label>
+        <label htmlFor="estadoCivil">
+          Estado Civil
+          <select
+            id="estadoCivil"
+            value={estadoCivil}
+            onChange={(e) => setEstadoCivil(e.target.value)}
+            required
+          >
+            <option value="">Seleccione el estado civil</option>
+            <option value="casado">Casado</option>
+            <option value="divorciado">Divorciado</option>
+            <option value="viudo">Viudo</option>
+            <option value="soltero">Soltero</option>
+          </select>
+        </label>
+        <label htmlFor="numHijos">
           Número de Hijos
           <input
+            id="numHijos"
             type="number"
             value={numHijos}
             onChange={(e) => setNumHijos(Number(e.target.value))}
             required
           />
         </label>
-        <select
-          value={propiedad}
-          onChange={(e) => setPropiedad(e.target.value)}
-          required
-        >
-          <option value="">Propiedad</option>
-          <option value="casa_propia">Casa Propia</option>
-          <option value="rentada">Rentada</option>
-          <option value="prestada">Prestada</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Grupo ID"
-          value={grupoId}
-          onChange={(e) => setGrupoId(e.target.value)}
-          required
-        />
+        <label htmlFor="propiedad">
+          Propiedad
+          <select
+            id="propiedad"
+            value={propiedad}
+            onChange={(e) => setPropiedad(e.target.value)}
+            required
+          >
+            <option value="">Seleccione el tipo de propiedad</option>
+            <option value="casa_propia">Casa Propia</option>
+            <option value="rentada">Rentada</option>
+            <option value="prestada">Prestada</option>
+          </select>
+        </label>
+        <label htmlFor="grupoId">
+          Grupo ID
+          <input
+            id="grupoId"
+            type="text"
+            value={grupoId}
+            onChange={(e) => setGrupoId(e.target.value)}
+            required
+          />
+        </label>
         <button type="submit">Dar de alta</button>
       </form>
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
