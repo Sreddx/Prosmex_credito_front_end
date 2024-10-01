@@ -26,12 +26,30 @@ export interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-// Interfaces para Clientes
+// Interfaces para los clientes
 export interface Cliente {
-  id?: number;
-  nombre: string;
-  direccion: string;
-  telefono: string;
+  id: number; // ID único del cliente
+  nombre: string; // Nombre del cliente
+  apellido_paterno: string; // Apellido paterno del cliente
+  apellido_materno: string; // Apellido materno del cliente
+  colonia: string; // Colonia donde vive el cliente
+  cp: string; // Código postal
+  codigo_ine: string; // Código INE del cliente
+  estado_civil: string; // Estado civil del cliente (soltero, casado, viudo, etc.)
+  num_hijos: number; // Número de hijos del cliente
+  propiedad: string; // Tipo de propiedad (casa propia, rentada, etc.)
+  es_aval: boolean; // Indica si el cliente está usando aval
+  grupo_id: number; // ID del grupo al que pertenece el cliente
+}
+
+// Otras interfaces...
+export interface CreateClienteResponse {
+  message: string;
+  cliente: string; // ID del cliente creado
+}
+
+export interface ErrorResponse {
+  error: string;
 }
 
 // Interfaces para Préstamos
