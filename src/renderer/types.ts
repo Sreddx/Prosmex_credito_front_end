@@ -54,9 +54,42 @@ export interface ErrorResponse {
   status: number;
 }
 
-// Interfaces para Préstamos
+// Interfaz para Préstamo
 export interface Prestamo {
-  id: number;
-  clienteId: number;
-  monto: number;
+  prestamo_id?: number; // ID del préstamo, opcional ya que no lo tendrás al crear un préstamo
+  cliente_id: number; // ID del cliente
+  fecha_inicio: string; // Fecha de inicio del préstamo
+  monto_prestamo: number; // Monto del préstamo
+  tipo_prestamo_id: number; // ID del tipo de préstamo
+  aval_id: number; // ID del aval
+}
+
+export interface PrestamoConNombre {
+  prestamo_id: number;
+  cliente_id: number;
+  cliente_nombre: string;
+  fecha_inicio: string;
+  monto_prestamo: string;
+  aval_id: number;
+  aval_nombre: string;
+  tipo_prestamo_id: number;
+  tipo_prestamo_nombre: string;
+}
+// Interfaz para Tipo de Préstamo
+export interface TipoPrestamo {
+  tipo_prestamo_id: number; // ID del tipo de préstamo
+  nombre: string; // Nombre del tipo de préstamo (e.g., 'Préstamo Personal')
+}
+
+// Interfaz para Aval (clientes que son avales)
+export interface Aval {
+  id: number; // ID del aval (es un cliente que actúa como aval)
+  nombre: string; // Nombre del aval
+  grupo_id: number; // ID del grupo al que pertenece el aval
+}
+
+// Interfaz para la respuesta de creación de préstamo
+export interface CreatePrestamoResponse {
+  message: string; // Mensaje de éxito
+  prestamo: number; // ID del préstamo creado
 }

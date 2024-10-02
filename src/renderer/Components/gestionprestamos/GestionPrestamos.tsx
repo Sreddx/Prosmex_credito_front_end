@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Prestamo } from '../../types';
+import { createPrestamo, listTiposPrestamo, listAvales, listClientesRegistroPrestamo } from './Api'; // Importar la nueva función
 import './GestionPrestamos.css';
 
 function GestionPrestamos() {
@@ -8,29 +9,63 @@ function GestionPrestamos() {
   const [fechaInicio, setFechaInicio] = useState('');
   const [montoPrestamo, setMontoPrestamo] = useState(0);
   const [tipoPrestamoId, setTipoPrestamoId] = useState('');
-  const [titularId, setTitularId] = useState('');
   const [avalId, setAvalId] = useState('');
+  const [tiposPrestamo, setTiposPrestamo] = useState<
+    {
+      nombre: string;
+      tipo_prestamo_id: number;
+    }[]
+  >([]);
+  const [avales, setAvales] = useState<{ id: number; nombre: string }[]>([]);
+  const [clientes, setClientes] = useState<{ id: number; nombre: string }[]>([]);
   const navigate = useNavigate();
+
+  // Obtener la lista de clientes, tipos de préstamos y avales
+  useEffect(() => {
+    const fetchClientes = async () => {
+      const clientes = await listClientesRegistroPrestamo();
+      if ('error' in clientes) {
+        console.error(clientes.error);
+      } else {
+        setClientes(clientes);
+      }
+    };
+
+    const fetchTiposPrestamo = async () => {
+      const tipos = await listTiposPrestamo();
+      if ('error' in tipos) {
+        console.error(tipos.error);
+      } else {
+        setTiposPrestamo(tipos);
+      }
+    };
+
+    const fetchAvales = async () => {
+      const avalesList = await listAvales();
+      if ('error' in avalesList) {
+        console.error(avalesList.error);
+      } else {
+        setAvales(avalesList);
+      }
+    };
+
+    fetchClientes();
+    fetchTiposPrestamo();
+    fetchAvales();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const nuevoPrestamo: Prestamo = {
-      clienteId,
-      fechaInicio,
-      montoPrestamo,
-      tipoPrestamoId,
-      titularId,
-      avalId,
+      cliente_id: Number(clienteId),
+      fecha_inicio: fechaInicio,
+      monto_prestamo: montoPrestamo,
+      tipo_prestamo_id: Number(tipoPrestamoId),
+      aval_id: Number(avalId),
     };
     try {
-      const response = await fetch('/api/prestamos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nuevoPrestamo),
-      });
-      if (response.ok) {
+      const response = await createPrestamo(nuevoPrestamo);
+      if ('prestamo' in response) {
         console.log('Préstamo creado:', nuevoPrestamo);
         navigate('/dashboard');
       } else {
@@ -45,52 +80,75 @@ function GestionPrestamos() {
     <div className="gestion-prestamos-form-container">
       <form onSubmit={handleSubmit} className="gestion-prestamos-form">
         <h1>Crear Préstamo</h1>
-        <input
-          type="text"
-          placeholder="ID Cliente"
-          value={clienteId}
-          onChange={(e) => setClienteId(e.target.value)}
-          required
-        />
-        <label>
+
+        <label htmlFor="clienteId">
+          Cliente
+          <select
+            id="clienteId"
+            value={clienteId}
+            onChange={(e) => setClienteId(e.target.value)}
+            required
+          >
+            <option value="">Seleccione un cliente</option>
+            {clientes.map((cliente) => (
+              <option key={cliente.id} value={cliente.id}>
+                {cliente.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label htmlFor="fechaInicio">
           Fecha de Inicio
           <input
+            id="fechaInicio"
             type="date"
             value={fechaInicio}
             onChange={(e) => setFechaInicio(e.target.value)}
             required
           />
         </label>
-        <label>
+
+        <label htmlFor="montoPrestamo">
           Monto del Préstamo
           <input
+            id="montoPrestamo"
             type="number"
             value={montoPrestamo}
             onChange={(e) => setMontoPrestamo(Number(e.target.value))}
             required
           />
         </label>
-        <input
-          type="text"
-          placeholder="ID Tipo de Préstamo"
-          value={tipoPrestamoId}
-          onChange={(e) => setTipoPrestamoId(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="ID Titular"
-          value={titularId}
-          onChange={(e) => setTitularId(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="ID Aval"
-          value={avalId}
-          onChange={(e) => setAvalId(e.target.value)}
-          required
-        />
+
+        <label htmlFor="tipoPrestamoId">
+          Tipo de Préstamo
+          <select
+            id="tipoPrestamoId"
+            value={tipoPrestamoId}
+            onChange={(e) => setTipoPrestamoId(e.target.value)}
+            required
+          >
+            <option value="">Seleccione el tipo de préstamo</option>
+            {tiposPrestamo.map((tipo) => (
+              <option key={tipo.tipo_prestamo_id} value={tipo.tipo_prestamo_id}>
+                {tipo.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label htmlFor="avalId">
+          Aval
+          <select id="avalId" value={avalId} onChange={(e) => setAvalId(e.target.value)} required>
+            <option value="">Seleccione un aval</option>
+            {avales.map((aval) => (
+              <option key={aval.id} value={aval.id}>
+                {aval.nombre}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <button type="submit">Crear Préstamo</button>
       </form>
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
