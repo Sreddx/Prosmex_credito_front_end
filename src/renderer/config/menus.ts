@@ -12,7 +12,7 @@ export const menus = [
       { name: 'Creación de Préstamo', permission: 2, route: '/gestion-prestamos' },
       { name: 'Listado de Préstamos', permission: 2, route: '/listar-prestamos' },
       { name: 'Registro de pagos de cobranzas a nivel grupo', permission: 3 },
-      { name: 'Realizar corte con superior', permission: 4 },
+      { name: 'Realizar corte con superior', permission: 4, route: '/corte' },
     ],
   },
   {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendUrl = 'http://localhost:5000';
+const backendUrl = 'http://127.0.0.1:5000';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loginApi = async (email: string, password: string) => {

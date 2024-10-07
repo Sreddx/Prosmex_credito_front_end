@@ -21,7 +21,7 @@ function getAssetsPath(fileName: string) {
 
 function getHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
-    const url = `http://localhost:${port}`;
+    const url = `http://127.0.0.1:${port}`;
     return url;
   }
   return `file://${path.resolve(__dirname, `../renderer/${htmlFileName}`)}`;

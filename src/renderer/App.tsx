@@ -5,8 +5,7 @@ import Dashboard from './Components/dashboard/Dashboard';
 import AltaCliente from './Components/altacliente/AltaCliente';
 import GestionClientes from './Components/gestionclientes/GestionClientes';
 import GestionPrestamos from './Components/gestionprestamos/GestionPrestamos';
-import ListarPrestamos from './Components/listarprestamos/ListarPrestamos';
-import EdicionClientes from './Components/edicioncliente/EdicionClientes';
+import Corte from './Components/corte/Corte';
 import CreacionUsuario from './Components/creacionusuario/CreacionUsuario';
 import BajaUsuario from './Components/bajausuario/BajaUsuario';
 import BajaPrestamo from './Components/bajaprestamo/BajaPrestamo';
@@ -54,18 +53,10 @@ function App() {
             }
           />
           <Route
-            path="/listar-prestamos"
-            element={
-              <ProtectedRoute requiredPermissions={[2]}>
-                <ListarPrestamos />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/editar-cliente/:id"
+            path="/corte"
             element={
               <ProtectedRoute requiredPermissions={[1]}>
-                <EdicionClientes />
+                <Corte />
               </ProtectedRoute>
             }
           />

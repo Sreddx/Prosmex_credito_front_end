@@ -1,0 +1,62 @@
+.corte-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: center; /* Centra el contenido verticalmente */
+  min-height: 100vh; /* Asegura que ocupe el 100% de la altura de la pantalla */
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.corte-table {
+  width: 50%; /* Ajusta el ancho de la tabla según lo necesites */
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.corte-table th,
+.corte-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.corte-table th {
+  background-color: #f0f0f0;
+}
+
+.corte-total {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.back-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.back-button:hover {
+  background-color: #218838;
+}
+
+.add-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
