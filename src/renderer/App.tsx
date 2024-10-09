@@ -1,5 +1,6 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import ListarPrestamos from '@Components/listarprestamos/ListarPrestamos';
 import Login from './Components/login/Login';
 import Dashboard from './Components/dashboard/Dashboard';
 import AltaCliente from './Components/altacliente/AltaCliente';
@@ -49,6 +50,14 @@ function App() {
             element={
               <ProtectedRoute requiredPermissions={[2]}>
                 <GestionPrestamos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/listar-prestamos"
+            element={
+              <ProtectedRoute requiredPermissions={[2]}>
+                <ListarPrestamos />
               </ProtectedRoute>
             }
           />
