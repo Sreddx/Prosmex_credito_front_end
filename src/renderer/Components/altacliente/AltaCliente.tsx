@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Cliente } from '../../types';
-import { createCliente } from '../gestionclientes/Api'; // Ajusta la ruta según tu estructura
+import { createCliente } from '../gestionclientes/Api';
+import apiClient from '../../utils/apiClient';
+import ModalAlertas from '../modalAlertas/ModalAlertas'; // Importa el componente Modal
 import './AltaCliente.css';
+
+interface Grupo {
+  grupo_id: number;
+  nombre_grupo: string;
+  ruta_id: number;
+}
 
 function AltaCliente() {
   const [nombre, setNombre] = useState('');
@@ -14,11 +22,47 @@ function AltaCliente() {
   const [estadoCivil, setEstadoCivil] = useState('');
   const [numHijos, setNumHijos] = useState(0);
   const [propiedad, setPropiedad] = useState('');
-  const [grupoId, setGrupoId] = useState('');
+  const [grupoId, setGrupoId] = useState<number | ''>('');
+  const [grupos, setGrupos] = useState<Grupo[]>([]);
+  const [modalMessage, setModalMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchGrupos = async () => {
+      try {
+        const response = await apiClient.get('/grupos/');
+        setGrupos(response.data.data);
+      } catch (error) {
+        console.error('Error al obtener los grupos:', error);
+      }
+    };
+    fetchGrupos();
+  }, []);
+
+  const validarFormulario = (): boolean => {
+    if (cp.length !== 5 || isNaN(Number(cp))) {
+      setModalMessage('El código postal debe tener 5 dígitos numéricos.');
+      setIsModalOpen(true);
+      return false;
+    }
+    if (colonia.trim() === '') {
+      setModalMessage('La colonia no puede estar vacía.');
+      setIsModalOpen(true);
+      return false;
+    }
+    if (codigoIne.length !== 13) {
+      setModalMessage('El código INE debe tener 13 caracteres.');
+      setIsModalOpen(true);
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validarFormulario()) return;
+
     const nuevoCliente: Cliente = {
       nombre,
       apellido_paterno: apellidoPaterno,
@@ -32,18 +76,27 @@ function AltaCliente() {
       grupo_id: Number(grupoId),
     };
 
-    console.log('Datos del nuevo cliente:', nuevoCliente);
     try {
       const response = await createCliente(nuevoCliente);
-      if (response && response.status === 201) {
-        console.log('Cliente dado de alta:', nuevoCliente);
-        alert('Cliente dado de alta con éxito');
-        navigate('/dashboard');
+
+      // Verificar si la respuesta contiene el mensaje esperado
+      if (response?.data?.message === 'Cliente created successfully') {
+        setModalMessage('Cliente dado de alta con éxito');
+        setIsModalOpen(true);
+
+        // Navegar al dashboard después de un breve retraso
+        setTimeout(() => {
+          setIsModalOpen(false);
+          navigate('/dashboard');
+        }, 2000);
       } else {
-        console.error('Error al dar de alta al cliente');
+        setModalMessage('Error al dar de alta al cliente.');
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error('Error al dar de alta al cliente:', error);
+      setModalMessage('Error al dar de alta al cliente.');
+      setIsModalOpen(true);
     }
   };
 
@@ -51,6 +104,7 @@ function AltaCliente() {
     <div className="alta-cliente-form-container">
       <form onSubmit={handleSubmit} className="alta-cliente-form">
         <h1>Alta de Cliente</h1>
+
         <label htmlFor="nombre">
           Nombre
           <input
@@ -61,6 +115,7 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="apellidoPaterno">
           Apellido Paterno
           <input
@@ -71,6 +126,7 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="apellidoMaterno">
           Apellido Materno
           <input
@@ -81,6 +137,7 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="colonia">
           Colonia
           <input
@@ -91,10 +148,12 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="cp">
           Código Postal
           <input id="cp" type="text" value={cp} onChange={(e) => setCp(e.target.value)} required />
         </label>
+
         <label htmlFor="codigoIne">
           Código INE
           <input
@@ -105,6 +164,7 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="estadoCivil">
           Estado Civil
           <select
@@ -120,6 +180,7 @@ function AltaCliente() {
             <option value="soltero">Soltero</option>
           </select>
         </label>
+
         <label htmlFor="numHijos">
           Número de Hijos
           <input
@@ -130,6 +191,7 @@ function AltaCliente() {
             required
           />
         </label>
+
         <label htmlFor="propiedad">
           Propiedad
           <select
@@ -144,21 +206,32 @@ function AltaCliente() {
             <option value="prestada">Prestada</option>
           </select>
         </label>
+
         <label htmlFor="grupoId">
-          Grupo ID
-          <input
+          Grupo
+          <select
             id="grupoId"
-            type="text"
             value={grupoId}
-            onChange={(e) => setGrupoId(e.target.value)}
+            onChange={(e) => setGrupoId(Number(e.target.value))}
             required
-          />
+          >
+            <option value="">Seleccione un grupo</option>
+            {grupos.map((grupo) => (
+              <option key={grupo.grupo_id} value={grupo.grupo_id}>
+                {`${grupo.nombre_grupo} - Con ruta ${grupo.ruta_id}`}
+              </option>
+            ))}
+          </select>
         </label>
+
         <button type="submit">Dar de alta</button>
       </form>
-      <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
-        Regresar al Dashboard
-      </button>
+
+      <ModalAlertas
+        message={modalMessage}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
