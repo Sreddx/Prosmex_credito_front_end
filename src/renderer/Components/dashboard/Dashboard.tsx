@@ -1,7 +1,10 @@
+// Dashboard.tsx
+
 import React from 'react';
 import Menu from '../menu/Menu';
 import { useAuth } from '../../context/AuthContext';
 import './Dashboard.css';
+import ReporteGeneral from '../reportegeneral/ReporteGeneral'; // Adjust the path accordingly
 
 function Dashboard() {
   const { logout } = useAuth();
@@ -15,98 +18,7 @@ function Dashboard() {
         </button>
       </aside>
       <main className="content">
-        <h1>Reporte General</h1>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>GERENTE</th>
-              <th>SUPERVISOR</th>
-              <th>TITULAR</th>
-              <th>RUTA</th>
-              <th>GRUPO</th>
-              <th>COB IDEAL</th>
-              <th>COB REAL</th>
-              <th>PRESTAMO PAPEL</th>
-              <th>PRESTAMO REAL</th>
-              <th>NUMERO DE PRESTAMOS</th>
-              <th>MOROSIDAD $$$</th>
-              <th>MOROSIDAD %</th>
-              <th>BONO</th>
-              <th>% PRESTAMO</th>
-              <th>SOBRANTE</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>GERENTE</td>
-              <td>SUPERVISOR</td>
-              <td>TITULAR</td>
-              <td>RUTA</td>
-              <td>GRUPO 1</td>
-              <td>2000.0</td>
-              <td>2000.0</td>
-              <td>5000.0</td>
-              <td>4000.0</td>
-              <td>10</td>
-              <td>0.0</td>
-              <td>0.0</td>
-              <td>500.0</td>
-              <td>2.0</td>
-              <td>-2000.0</td>
-            </tr>
-            <tr>
-              <td>GERENTE</td>
-              <td>SUPERVISOR</td>
-              <td>TITULAR</td>
-              <td>RUTA</td>
-              <td>GRUPO 2</td>
-              <td>2500.0</td>
-              <td>2300.0</td>
-              <td>8000.0</td>
-              <td>7000.0</td>
-              <td>15</td>
-              <td>200.0</td>
-              <td>0.08</td>
-              <td>300.0</td>
-              <td>3.043478</td>
-              <td>-4700.0</td>
-            </tr>
-            <tr>
-              <td>GERENTE</td>
-              <td>SUPERVISOR</td>
-              <td>TITULAR</td>
-              <td>RUTA</td>
-              <td>GRUPO 3</td>
-              <td>2000.0</td>
-              <td>1800.0</td>
-              <td>1500.0</td>
-              <td>1000.0</td>
-              <td>5</td>
-              <td>200.0</td>
-              <td>0.1</td>
-              <td>100.0</td>
-              <td>0.555556</td>
-              <td>800.0</td>
-            </tr>
-            <tr>
-              <td>TOTALES</td>
-              <td />
-              <td />
-              <td />
-              <td />
-              <td>6500.0</td>
-              <td>6100.0</td>
-              <td>14500.0</td>
-              <td>12000.0</td>
-              <td>30</td>
-              <td>400.0</td>
-              <td>0.061538</td>
-              <td>900.0</td>
-              <td>0.938462</td>
-              <td>-5900.0</td>
-            </tr>
-          </tbody>
-        </table>
+        <ReporteGeneral />
       </main>
     </div>
   );

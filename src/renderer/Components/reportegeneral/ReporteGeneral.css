@@ -1,0 +1,31 @@
+/* ReporteGeneral.css */
+
+.reporte-general-container {
+  padding: 20px;
+}
+
+.reporte-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.reporte-table th,
+.reporte-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.reporte-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.reporte-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.reporte-table tr:hover {
+  background-color: #ddd;
+}
