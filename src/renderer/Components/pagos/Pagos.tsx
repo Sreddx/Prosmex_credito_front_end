@@ -1,16 +1,10 @@
+// Pagos.tsx
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Pagos.css';
-
-interface Grupo {
-  id: number;
-  nombre: string;
-}
-
-interface Prestamo {
-  id: number;
-  monto: number;
-}
+import { getGrupos, getPrestamosByGrupo, createPago, Grupo, Prestamo } from './api';
+import ModalAlertas from '../modalAlertas/ModalAlertas'; // Adjust the path accordingly
 
 function Pagos() {
   const [grupos, setGrupos] = useState<Grupo[]>([]);
@@ -20,38 +14,69 @@ function Pagos() {
   const [monto, setMonto] = useState<number>(0);
   const [fechaPago, setFechaPago] = useState<string>(new Date().toISOString().split('T')[0]);
 
+  const [modalMessage, setModalMessage] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Aquí cargarías los grupos y préstamos desde tu API o backend
-    setGrupos([
-      { id: 1, nombre: 'OCOTLAN 3' },
-      { id: 2, nombre: 'TEPA 2' },
-    ]);
+    // Fetch grupos from the backend
+    const fetchGrupos = async () => {
+      try {
+        const data = await getGrupos();
+        setGrupos(data);
+      } catch (error) {
+        setModalMessage('Error al cargar los grupos.');
+        setIsModalOpen(true);
+      }
+    };
 
-    setPrestamos([
-      { id: 34, monto: 3000 },
-      { id: 37, monto: 2000 },
-    ]);
+    fetchGrupos();
   }, []);
 
-  const handleRegistrarPago = () => {
+  useEffect(() => {
+    if (grupoSeleccionado) {
+      // Fetch prestamos for the selected grupo
+      const fetchPrestamos = async () => {
+        try {
+          const data = await getPrestamosByGrupo(grupoSeleccionado as number);
+          setPrestamos(data);
+        } catch (error) {
+          setModalMessage('Error al cargar los préstamos.');
+          setIsModalOpen(true);
+        }
+      };
+
+      fetchPrestamos();
+    } else {
+      setPrestamos([]);
+      setPrestamoSeleccionado('');
+    }
+  }, [grupoSeleccionado]);
+
+  const handleRegistrarPago = async () => {
     if (!grupoSeleccionado || !prestamoSeleccionado || monto <= 0) {
-      alert('Por favor, completa todos los campos correctamente.');
+      setModalMessage('Por favor, completa todos los campos correctamente.');
+      setIsModalOpen(true);
       return;
     }
 
-    // Lógica para registrar el pago (enviar los datos al backend)
-    console.log({
-      grupo: grupoSeleccionado,
-      prestamo: prestamoSeleccionado,
-      monto,
-      fecha: fechaPago,
-    });
+    const pagoData = {
+      fecha_pago: fechaPago,
+      monto_pagado: monto,
+      prestamo_id: prestamoSeleccionado as number,
+    };
 
-    alert('Pago registrado con éxito');
-    setMonto(0); // Resetear el monto
-    setFechaPago(new Date().toISOString().split('T')[0]); // Resetear la fecha
+    try {
+      await createPago(pagoData);
+      setModalMessage('Pago registrado con éxito');
+      setIsModalOpen(true);
+      setMonto(0);
+      setFechaPago(new Date().toISOString().split('T')[0]);
+    } catch (error) {
+      setModalMessage('Error al registrar el pago.');
+      setIsModalOpen(true);
+    }
   };
 
   return (
@@ -77,11 +102,12 @@ function Pagos() {
           id="prestamo"
           value={prestamoSeleccionado}
           onChange={(e) => setPrestamoSeleccionado(Number(e.target.value))}
+          disabled={!grupoSeleccionado}
         >
           <option value="">Selecciona un préstamo</option>
           {prestamos.map((prestamo) => (
             <option key={prestamo.id} value={prestamo.id}>
-              Préstamo {prestamo.id} - ${prestamo.monto}
+              Préstamo {prestamo.id} - ${prestamo.monto} - {prestamo.cliente_nombrecompleto}
             </option>
           ))}
         </select>
@@ -110,6 +136,12 @@ function Pagos() {
           Regresar al Dashboard
         </button>
       </div>
+
+      <ModalAlertas
+        isOpen={isModalOpen}
+        message={modalMessage}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
