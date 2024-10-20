@@ -1,8 +1,7 @@
-// ReporteGeneral.tsx
-
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';  // Importamos Link para crear el enlace
 import './ReporteGeneral.css';
-import { getReporteGeneral, ReporteData } from './api'; // Adjust the path as necessary
+import { getReporteGeneral, ReporteData } from './api'; // Ajusta la ruta según sea necesario
 
 function ReporteGeneral() {
   const [reporteData, setReporteData] = useState<ReporteData[]>([]);
@@ -110,7 +109,10 @@ function ReporteGeneral() {
               <td>{row.supervisor || 'N/A'}</td>
               <td>{row.titular || 'N/A'}</td>
               <td>{row.ruta || 'N/A'}</td>
-              <td>{row.grupo || 'N/A'}</td>
+              <td>
+                {/* El grupo se convierte en un hipervínculo */}
+                <Link to={`/detalle-grupo/${row.grupo_id}`}>{row.grupo || 'N/A'}</Link>
+              </td>
               <td>{row.cobranza_ideal !== null ? row.cobranza_ideal.toFixed(2) : '0.00'}</td>
               <td>{row.cobranza_real !== null ? row.cobranza_real.toFixed(2) : '0.00'}</td>
               <td>{row.prestamo_papel !== null ? row.prestamo_papel.toFixed(2) : '0.00'}</td>
