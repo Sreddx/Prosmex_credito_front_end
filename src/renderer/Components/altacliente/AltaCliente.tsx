@@ -227,6 +227,10 @@ function AltaCliente() {
         <button type="submit">Dar de alta</button>
       </form>
 
+      <button className="back-button" onClick={() => navigate('/dashboard')}>
+        Regresar al Dashboard
+      </button>
+
       <ModalAlertas
         message={modalMessage}
         isOpen={isModalOpen}
