@@ -13,6 +13,7 @@ import BajaUsuario from './Components/bajausuario/BajaUsuario';
 import BajaPrestamo from './Components/bajaprestamo/BajaPrestamo';
 import AsignacionTitularGrupo from './Components/asignaciontitulargrupo/AsignacionTitularGrupo';
 import AsignacionGrupoRuta from './Components/asignaciongruporuta/AsignacionGrupoRuta';
+import DetalleGrupo from './Components/detallegrupo/DetalleGrupo'; // Importa el componente DetalleGrupo
 import ProtectedRoute from './Components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
@@ -118,7 +119,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Añadir más rutas protegidas según sea necesario */}
+          <Route
+            path="/detalle-grupo/:grupo_id"
+            element={
+              <ProtectedRoute requiredPermissions={[1, 2, 3]}>
+                <DetalleGrupo />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>
