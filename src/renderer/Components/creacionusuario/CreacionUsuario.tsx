@@ -14,7 +14,7 @@ function CreacionUsuario() {
   const [apellidoMaterno, setApellidoMaterno] = useState('');
   const [role, setRole] = useState('');
   const [roles, setRoles] = useState<Rol[]>([]);
-  const [email, setEmail] = useState('');
+  const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ function CreacionUsuario() {
       apellido_paterno: apellidoPaterno,
       apellido_materno: apellidoMaterno,
       rol_id: role,
-      email,
+      usuario,
       contrasena: password,
     };
 
@@ -96,9 +96,9 @@ function CreacionUsuario() {
         </select>
         <input
           type="text"
-          placeholder="Correo Electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Usuario"
+          value={usuario}
+          onChange={(e) => setUsuario(e.target.value)}
           required
         />
         <input

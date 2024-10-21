@@ -6,7 +6,7 @@ export interface User {
   nombre: string;
   apellido_paterno: string;
   apellido_materno: string;
-  email: string;
+  usuario: string;
   rol: string;
   rol_id: number;
   permissions: number[];
