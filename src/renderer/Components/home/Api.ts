@@ -3,10 +3,10 @@ import axios from 'axios';
 const backendUrl = 'http://127.0.0.1:5000';
 
 // eslint-disable-next-line import/prefer-default-export
-export const loginApi = async (email: string, password: string) => {
+export const loginApi = async (usuario: string, password: string) => {
   try {
     const response = await axios.post(`${backendUrl}/auth/login`, {
-      email,
+      usuario,
       contrasena: password,
     });
 

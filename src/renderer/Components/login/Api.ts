@@ -3,7 +3,7 @@ import apiClient from '../../utils/apiClient';
 interface UserResponse {
   apellido_materno: string;
   apellido_paterno: string;
-  email: string;
+  usuario: string;
   nombre: string;
   rol: string;
   rol_id: number;
@@ -25,12 +25,12 @@ interface ErrorResponse {
 
 // eslint-disable-next-line import/prefer-default-export
 export const loginApi = async (
-  email: string,
+  usuario: string,
   password: string,
 ): Promise<LoginResponse | ErrorResponse> => {
   try {
     const response = await apiClient.post<LoginResponse>('/auth/login', {
-      email,
+      usuario: usuario,
       contrasena: password,
     });
 
