@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';  // Importamos Link para crear el enlace
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para la redirección
 import './ReporteGeneral.css';
 import { getReporteGeneral, ReporteData } from './api'; // Ajusta la ruta según sea necesario
 
@@ -8,6 +8,7 @@ function ReporteGeneral() {
   const [totals, setTotals] = useState<Partial<ReporteData>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+  const navigate = useNavigate(); // Usamos navigate para redirigir a la pantalla de detalle del grupo
 
   useEffect(() => {
     const fetchReporte = async () => {
@@ -54,14 +55,12 @@ function ReporteGeneral() {
       totals.sobrante! += row.sobrante || 0;
     });
 
-    // Calculate morosidad_porcentaje total
     if (totals.cobranza_ideal! !== 0) {
       totals.morosidad_porcentaje = totals.morosidad_monto! / totals.cobranza_ideal!;
     } else {
       totals.morosidad_porcentaje = null;
     }
 
-    // Calculate porcentaje_prestamo total
     if (totals.prestamo_real! !== 0) {
       totals.porcentaje_prestamo = totals.cobranza_real! / totals.prestamo_real!;
     } else {
@@ -104,15 +103,16 @@ function ReporteGeneral() {
         </thead>
         <tbody>
           {reporteData.map((row, index) => (
-            <tr key={index}>
+            <tr
+              key={index}
+              className="clickable-row"
+              onClick={() => navigate(`/detalle-grupo/${row.grupo_id}`)} // Navegar al detalle de grupo al hacer clic en la fila
+            >
               <td>{row.gerente || 'N/A'}</td>
               <td>{row.supervisor || 'N/A'}</td>
               <td>{row.titular || 'N/A'}</td>
               <td>{row.ruta || 'N/A'}</td>
-              <td>
-                {/* El grupo se convierte en un hipervínculo */}
-                <Link to={`/detalle-grupo/${row.grupo_id}`}>{row.grupo || 'N/A'}</Link>
-              </td>
+              <td>{row.grupo || 'N/A'}</td>
               <td>{row.cobranza_ideal !== null ? row.cobranza_ideal.toFixed(2) : '0.00'}</td>
               <td>{row.cobranza_real !== null ? row.cobranza_real.toFixed(2) : '0.00'}</td>
               <td>{row.prestamo_papel !== null ? row.prestamo_papel.toFixed(2) : '0.00'}</td>

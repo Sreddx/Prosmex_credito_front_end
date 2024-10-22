@@ -41,3 +41,20 @@
 .back-button:hover {
   background-color: #0056b3;
 }
+
+/* Para hacer que la fila sea clicable */
+.clickable-row {
+  cursor: pointer; /* Cambia el cursor cuando pasa el ratón */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Añade transición suave en el color de fondo y la transformación */
+}
+
+/* Animación al pasar el ratón sobre la fila */
+.clickable-row:hover {
+  background-color: #f0f0f0; /* Cambia el color de fondo al pasar el ratón */
+  transform: scale(1.02); /* Agranda la fila ligeramente al pasar el ratón */
+}
+
+/* Otras propiedades opcionales para mejorar el estilo */
+.clickable-row:hover td {
+  font-weight: bold; /* Hace que el texto sea negrita cuando pasa el ratón */
+}

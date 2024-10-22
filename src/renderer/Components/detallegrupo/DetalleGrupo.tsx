@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './DetalleGrupo.css';
 
 interface Prestamo {
@@ -47,6 +47,11 @@ function DetalleGrupo() {
     return <div>{error}</div>;
   }
 
+  // Función para redirigir al detalle del préstamo
+  const handleRowClick = (prestamo_id: number) => {
+    navigate(`/detalle-prestamo/${prestamo_id}`);
+  };
+
   return (
     <div className="detalle-grupo-container">
       <h1>Detalle del Grupo {grupo_id}</h1>
@@ -64,15 +69,11 @@ function DetalleGrupo() {
         </thead>
         <tbody>
           {prestamos.map((prestamo, index) => (
-            <tr key={index}>
+            <tr key={index} onClick={() => handleRowClick(prestamo.prestamo_id)} className="clickable-row">
               <td>{prestamo.cliente}</td>
               <td>{prestamo.aval}</td>
               <td>{prestamo.fechaInicio}</td>
-              <td>
-                <Link to={`/detalle-prestamo/${prestamo.prestamo_id}`}>
-                  {prestamo.prestamo}
-                </Link>
-              </td>
+              <td>{prestamo.prestamo}</td>
               <td>{prestamo.tipo}</td>
               <td>{prestamo.numPagos}</td>
               <td>{prestamo.semanasDebe}</td>

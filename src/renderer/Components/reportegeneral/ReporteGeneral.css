@@ -26,6 +26,15 @@
   background-color: #f9f9f9;
 }
 
-.reporte-table tr:hover {
+/* Agregar animación al pasar el ratón por encima */
+.clickable-row:hover {
   background-color: #ddd;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* Cambiar el color de fondo al hacer clic */
+.clickable-row:active {
+  background-color: #ccc;
+  transition: background-color 0.1s ease;
 }
