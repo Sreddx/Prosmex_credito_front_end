@@ -39,7 +39,7 @@ function ReporteGeneral() {
       cobranza_real: 0,
       prestamo_papel: 0,
       prestamo_real: 0,
-      numero_de_prestamos: 0,
+      numero_de_creditos: 0,
       morosidad_monto: 0,
       morosidad_porcentaje: null,
       porcentaje_prestamo: null,
@@ -51,7 +51,7 @@ function ReporteGeneral() {
       totals.cobranza_real! += row.cobranza_real || 0;
       totals.prestamo_papel! += row.prestamo_papel || 0;
       totals.prestamo_real! += row.prestamo_real || 0;
-      totals.numero_de_prestamos! += row.numero_de_prestamos || 0;
+      totals.numero_de_creditos! += row.numero_de_creditos || 0;
       totals.morosidad_monto! += row.morosidad_monto || 0;
       totals.sobrante! += row.sobrante || 0;
     });
@@ -129,7 +129,7 @@ function ReporteGeneral() {
               <td>{row.cobranza_real !== null ? row.cobranza_real.toFixed(2) : '0.00'}</td>
               <td>{row.prestamo_papel !== null ? row.prestamo_papel.toFixed(2) : '0.00'}</td>
               <td>{row.prestamo_real !== null ? row.prestamo_real.toFixed(2) : '0.00'}</td>
-              <td>{row.numero_de_prestamos !== null ? row.numero_de_prestamos : '0'}</td>
+              <td>{row.numero_de_creditos !== null ? row.numero_de_creditos : '0'}</td>
               <td>{row.morosidad_monto !== null ? row.morosidad_monto.toFixed(2) : '0.00'}</td>
               <td>
                 {row.morosidad_porcentaje !== null
@@ -156,7 +156,7 @@ function ReporteGeneral() {
               <td>{totals.cobranza_real !== null ? totals.cobranza_real.toFixed(2) : '0.00'}</td>
               <td>{totals.prestamo_papel !== null ? totals.prestamo_papel.toFixed(2) : '0.00'}</td>
               <td>{totals.prestamo_real !== null ? totals.prestamo_real.toFixed(2) : '0.00'}</td>
-              <td>{totals.numero_de_prestamos !== null ? totals.numero_de_prestamos : '0'}</td>
+              <td>{totals.numero_de_creditos !== null ? totals.numero_de_creditos : '0'}</td>
               <td>
                 {totals.morosidad_monto !== null ? totals.morosidad_monto.toFixed(2) : '0.00'}
               </td>
