@@ -105,7 +105,7 @@ function ReporteGeneral() {
             <th>COB REAL</th>
             <th>PRESTAMO PAPEL</th>
             <th>PRESTAMO REAL</th>
-            <th>NUMERO DE PRESTAMOS</th>
+            <th>NUMERO DE CREDITOS</th>
             <th>MOROSIDAD $$$</th>
             <th>MOROSIDAD %</th>
             <th>BONO</th>
