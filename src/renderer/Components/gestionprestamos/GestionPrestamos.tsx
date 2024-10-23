@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Prestamo } from '../../types';
-import { createPrestamo, listTiposPrestamo, listAvales, listClientesRegistroPrestamo } from './Api'; // Importar la nueva función
+import { createPrestamo, listTiposPrestamo, listAvales, listClientesRegistroPrestamo } from './Api'; 
 import './GestionPrestamos.css';
+import ModalAlertas from '../modalAlertas/ModalAlertas'; // Importar ModalAlertas para mostrar mensajes de éxito
 
 function GestionPrestamos() {
   const [clienteId, setClienteId] = useState('');
@@ -18,6 +19,8 @@ function GestionPrestamos() {
   >([]);
   const [avales, setAvales] = useState<{ id: number; nombre: string }[]>([]);
   const [clientes, setClientes] = useState<{ id: number; nombre: string }[]>([]);
+  const [modalMessage, setModalMessage] = useState('');  // Estado para el mensaje del modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
   const navigate = useNavigate();
 
   // Obtener la lista de clientes, tipos de préstamos y avales
@@ -65,14 +68,23 @@ function GestionPrestamos() {
     };
     try {
       const response = await createPrestamo(nuevoPrestamo);
-      if ('prestamo' in response) {
-        console.log('Préstamo creado:', nuevoPrestamo);
-        navigate('/dashboard');
+      if (response?.status === 201 || response?.data?.message === 'Prestamo created successfully') {
+        setModalMessage('Préstamo creado con éxito');
+        setIsModalOpen(true);
+
+        // Cerrar el modal y redirigir al Dashboard después de 2 segundos
+        setTimeout(() => {
+          setIsModalOpen(false);
+          navigate('/dashboard');
+        }, 2000);
       } else {
-        console.error('Error al crear el préstamo');
+        setModalMessage('Error al crear el préstamo.');
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error('Error al crear el préstamo:', error);
+      setModalMessage('Error al crear el préstamo.');
+      setIsModalOpen(true);
     }
   };
 
@@ -151,9 +163,17 @@ function GestionPrestamos() {
 
         <button type="submit">Crear Préstamo</button>
       </form>
+
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
         Regresar al Dashboard
       </button>
+
+      {/* Modal para mensajes de confirmación */}
+      <ModalAlertas
+        message={modalMessage}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Cliente } from '../../types';
 import { createCliente } from '../gestionclientes/Api';
 import apiClient from '../../utils/apiClient';
-import ModalAlertas from '../modalAlertas/ModalAlertas'; // Importa el componente Modal
+import ModalAlertas from '../modalAlertas/ModalAlertas';
 import './AltaCliente.css';
 
 interface Grupo {
@@ -56,6 +56,21 @@ function AltaCliente() {
       setIsModalOpen(true);
       return false;
     }
+    if (numHijos < 0) {
+      setModalMessage('El número de hijos no puede ser negativo.');
+      setIsModalOpen(true);
+      return false;
+    }
+    if (!estadoCivil) {
+      setModalMessage('Seleccione un estado civil.');
+      setIsModalOpen(true);
+      return false;
+    }
+    if (!propiedad) {
+      setModalMessage('Seleccione el tipo de propiedad.');
+      setIsModalOpen(true);
+      return false;
+    }
     return true;
   };
 
@@ -79,12 +94,10 @@ function AltaCliente() {
     try {
       const response = await createCliente(nuevoCliente);
 
-      // Verificar si la respuesta contiene el mensaje esperado
-      if (response?.data?.message === 'Cliente created successfully') {
+      if (response?.status === 201 || response?.data?.message === 'Cliente created successfully') {
         setModalMessage('Cliente dado de alta con éxito');
         setIsModalOpen(true);
 
-        // Navegar al dashboard después de un breve retraso
         setTimeout(() => {
           setIsModalOpen(false);
           navigate('/dashboard');
