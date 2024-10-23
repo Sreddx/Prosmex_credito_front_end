@@ -15,6 +15,7 @@ export interface ReporteData {
   prestamo_papel: number;
   prestamo_real: number;
   numero_de_creditos: number;
+  numero_de_prestamos: number;
   morosidad_monto: number;
   morosidad_porcentaje: number;
   porcentaje_prestamo: number | null;
