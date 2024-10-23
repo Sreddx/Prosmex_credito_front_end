@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importar el hook para navegación
+import { useNavigate } from 'react-router-dom';
 import './Corte.css';
 
 interface Concepto {
@@ -9,14 +9,14 @@ interface Concepto {
 }
 
 function Corte() {
-  const [conceptos, setConceptos] = useState<Concepto[]>([]); // Sin conceptos iniciales
+  const [conceptos, setConceptos] = useState<Concepto[]>([]);
   const [nuevoConcepto, setNuevoConcepto] = useState<string>('');
   const [nuevoMonto, setNuevoMonto] = useState<number | ''>('');
   const [nuevasNotas, setNuevasNotas] = useState<string>('');
-  const navigate = useNavigate(); // Hook de navegación
+  const navigate = useNavigate();
 
   const handleAgregarConcepto = () => {
-    if (nuevoConcepto && nuevoMonto) {
+    if (nuevoConcepto && nuevoMonto > 0) {
       const nuevo: Concepto = {
         concepto: nuevoConcepto.toUpperCase(),
         monto: Number(nuevoMonto),
@@ -59,6 +59,7 @@ function Corte() {
                 placeholder="Nuevo concepto"
                 value={nuevoConcepto}
                 onChange={(e) => setNuevoConcepto(e.target.value)}
+                required
               />
             </td>
             <td>
@@ -81,15 +82,14 @@ function Corte() {
           </tr>
         </tbody>
       </table>
-      <button onClick={handleAgregarConcepto}>Agregar Concepto</button>
+      <button className="add-button" onClick={handleAgregarConcepto}>
+        Agregar Concepto
+      </button>
       <div className="corte-total">
         <strong>Total Gastos:</strong> ${calcularTotal().toFixed(2)}
       </div>
 
-      <button
-        className="back-button"
-        onClick={() => navigate('/dashboard')} // Redirigir al dashboard
-      >
+      <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard
       </button>
     </div>

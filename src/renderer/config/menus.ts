@@ -11,17 +11,22 @@ export const menus = [
     actions: [
       { name: 'Creación de Préstamo', permission: 2, route: '/gestion-prestamos' },
       { name: 'Listado de Préstamos', permission: 2, route: '/listar-prestamos' },
-      { name: 'Registro de pagos de cobranzas a nivel grupo', permission: 3, route: '/pagos' },
-      { name: 'Realizar corte con superior', permission: 4, route: '/corte' },
+      //{ name: 'Registro de pagos de cobranzas a nivel grupo', permission: 3, route: '/pagos' },
     ],
   },
   {
+    name: 'Corte',
+    actions: [
+      { name: 'Realizar corte con superior', permission: 4, route: '/corte' },
+    ],
+  },
+  /*{
     name: 'Reportes',
     actions: [
       { name: 'Visualizar Reportes de Rutas', permission: 6 },
       { name: 'Visualizar Reportes Generales', permission: 7 },
     ],
-  },
+  },*/
   {
     name: 'Usuarios',
     actions: [
