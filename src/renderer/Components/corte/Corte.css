@@ -4,7 +4,7 @@
   align-items: center; /* Mantiene el contenido centrado horizontalmente */
   justify-content: flex-start; /* Alinea el contenido hacia la parte superior */
   padding: 20px;
-  margin-top: 40px; /* Añade un margen superior para separar el contenido de la parte superior de la pantalla */
+  margin-top: 20px; /* Añade un margen superior para separar el contenido de la parte superior */
 }
 
 .corte-table {
@@ -24,10 +24,23 @@
   background-color: #f0f0f0;
 }
 
-.corte-total {
+/* Estilos para el sobrante de cobranza, total de gastos y corte total */
+.sobrante-cobranza,
+.corte-total,
+.corte-final-total {
   margin-top: 20px;
   font-size: 1.2em;
   font-weight: bold;
+}
+
+.semilla-input {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.semilla-input label {
+  margin-right: 10px;
 }
 
 button {

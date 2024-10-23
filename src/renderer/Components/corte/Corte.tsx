@@ -13,6 +13,8 @@ function Corte() {
   const [nuevoConcepto, setNuevoConcepto] = useState<string>('');
   const [nuevoMonto, setNuevoMonto] = useState<number | ''>('');
   const [nuevasNotas, setNuevasNotas] = useState<string>('');
+  const [semilla, setSemilla] = useState<number | ''>(0);
+  const sobranteCobranza = -5900.00; // Monto sobrante de cobranza como ejemplo
   const navigate = useNavigate();
 
   const handleAgregarConcepto = () => {
@@ -29,13 +31,21 @@ function Corte() {
     }
   };
 
-  const calcularTotal = () => {
+  const calcularTotalGastos = () => {
     return conceptos.reduce((total, concepto) => total + concepto.monto, 0);
+  };
+
+  const calcularCorteTotal = () => {
+    const totalGastos = calcularTotalGastos();
+    const totalSemilla = Number(semilla) || 0;
+    return sobranteCobranza - totalGastos + totalSemilla;
   };
 
   return (
     <div className="corte-container">
       <h1>Corte de Gastos</h1>
+
+      {/* Tabla de conceptos */}
       <table className="corte-table">
         <thead>
           <tr>
@@ -82,13 +92,42 @@ function Corte() {
           </tr>
         </tbody>
       </table>
+
+      {/* Botón para agregar concepto */}
       <button className="add-button" onClick={handleAgregarConcepto}>
         Agregar Concepto
       </button>
-      <div className="corte-total">
-        <strong>Total Gastos:</strong> ${calcularTotal().toFixed(2)}
+
+      {/* Sobrante de cobranza */}
+      <div className="sobrante-cobranza">
+        <strong>Sobrante de Cobranza:</strong> ${sobranteCobranza.toFixed(2)}
       </div>
 
+      {/* Total de gastos */}
+      <div className="corte-total">
+        <strong>Total Gastos:</strong> ${calcularTotalGastos().toFixed(2)}
+      </div>
+
+      {/* Input para ingresar el monto semilla */}
+      <div className="semilla-input">
+        <label htmlFor="semilla">
+          <strong>Monto Semilla:</strong>
+        </label>
+        <input
+          id="semilla"
+          type="number"
+          placeholder="Ingresa monto semilla"
+          value={semilla}
+          onChange={(e) => setSemilla(Number(e.target.value))}
+        />
+      </div>
+
+      {/* Corte total */}
+      <div className="corte-final-total">
+        <strong>Corte Total:</strong> ${calcularCorteTotal().toFixed(2)}
+      </div>
+
+      {/* Botón para regresar al Dashboard */}
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard
       </button>
