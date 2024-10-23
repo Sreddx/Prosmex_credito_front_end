@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importamos useNavigate para la redirección
+import { useNavigate } from 'react-router-dom';
 import './ReporteGeneral.css';
 import { getReporteGeneral, ReporteData } from './api'; // Ajusta la ruta según sea necesario
+import * as XLSX from 'xlsx';  // Importamos la biblioteca xlsx
 
 function ReporteGeneral() {
   const [reporteData, setReporteData] = useState<ReporteData[]>([]);
   const [totals, setTotals] = useState<Partial<ReporteData>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
-  const navigate = useNavigate(); // Usamos navigate para redirigir a la pantalla de detalle del grupo
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReporte = async () => {
@@ -70,6 +71,13 @@ function ReporteGeneral() {
     setTotals(totals);
   };
 
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(reporteData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Reporte General');
+    XLSX.writeFile(wb, 'ReporteGeneral.xlsx');
+  };
+
   if (loading) {
     return <div>Cargando reporte...</div>;
   }
@@ -81,6 +89,10 @@ function ReporteGeneral() {
   return (
     <div className="reporte-general-container">
       <h1>Reporte General</h1>
+
+      {/* Botón para exportar a Excel */}
+      <button onClick={exportToExcel} className="export-button">Exportar a Excel</button>
+
       <table className="reporte-table">
         <thead>
           <tr>
@@ -106,7 +118,7 @@ function ReporteGeneral() {
             <tr
               key={index}
               className="clickable-row"
-              onClick={() => navigate(`/detalle-grupo/${row.grupo_id}`)} // Navegar al detalle de grupo al hacer clic en la fila
+              onClick={() => navigate(`/detalle-grupo/${row.grupo_id}`)}
             >
               <td>{row.gerente || 'N/A'}</td>
               <td>{row.supervisor || 'N/A'}</td>
