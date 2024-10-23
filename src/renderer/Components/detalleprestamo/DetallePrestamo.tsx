@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DetallePrestamo.css';
+import { getPagosByPrestamo, addPago } from './api';
+import ModalAlertas from '../modalAlertas/ModalAlertas';
 
 interface Pago {
   grupo: string;
@@ -12,15 +14,19 @@ interface Pago {
 
 function DetallePrestamo() {
   const navigate = useNavigate();
-  const { prestamo_id } = useParams<{ prestamo_id: string }>(); // Obtén el id del préstamo de los params
+  const { prestamo_id } = useParams<{ prestamo_id: string }>();
   const [pagos, setPagos] = useState<Pago[]>([]);
-  
-  // Obtener la fecha actual en formato YYYY-MM-DD
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [modalMessage, setModalMessage] = useState<string>(''); // Mensaje del modal
+
   const getCurrentDate = (): string => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Asegura que el mes tenga 2 dígitos
-    const day = date.getDate().toString().padStart(2, '0'); // Asegura que el día tenga 2 dígitos
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
 
@@ -29,24 +35,40 @@ function DetallePrestamo() {
     cliente: '',
     montoPrestamo: '',
     montoPago: '',
-    fechaPago: getCurrentDate(), // Iniciar con la fecha actual
+    fechaPago: getCurrentDate(),
   });
 
   useEffect(() => {
-    // Simula una llamada para obtener los pagos del préstamo, puedes reemplazar esto con una llamada a tu API
-    const pagosPrestamo = [
-      { grupo: 'Grupo 1', cliente: 'Javier Lopez', montoPrestamo: '$5,000.00', montoPago: '$500.00', fechaPago: '2023-03-01' },
-      { grupo: 'Grupo 1', cliente: 'Javier Lopez', montoPrestamo: '$5,000.00', montoPago: '$500.00', fechaPago: '2023-03-08' },
-      { grupo: 'Grupo 1', cliente: 'Javier Lopez', montoPrestamo: '$5,000.00', montoPago: '$500.00', fechaPago: '2023-03-15' }
-    ];
-    setPagos(pagosPrestamo);
-    setNuevoPago({
-      grupo: 'Grupo 1', // Asumimos que el nuevo pago pertenece al mismo grupo
-      cliente: 'Javier Lopez', // Asumimos que el cliente es el mismo para la nueva fila
-      montoPrestamo: '$5,000.00', // Asumimos que el monto del préstamo es el mismo
-      montoPago: '',
-      fechaPago: getCurrentDate(), // Fecha actual predeterminada
-    });
+    const fetchPagosPrestamo = async () => {
+      try {
+        const data = await getPagosByPrestamo(Number(prestamo_id));
+
+        // Mapeamos los campos de la respuesta a los que espera el componente
+        const pagosMapeados = data.pagos.map((pago: any) => ({
+          grupo: pago.GRUPO,
+          cliente: pago.CLIENTE,
+          montoPrestamo: pago.MONTO_PRESTAMO.toString(), // Convertimos el monto a string
+          montoPago: pago.MONTO_PAGO.toString(),
+          fechaPago: pago.FECHA_PAGO,
+        }));
+
+        setPagos(pagosMapeados);
+        setNuevoPago({
+          grupo: pagosMapeados[0]?.grupo || '',
+          cliente: pagosMapeados[0]?.cliente || '',
+          montoPrestamo: pagosMapeados[0]?.montoPrestamo || '',
+          montoPago: '',
+          fechaPago: getCurrentDate(),
+        });
+        setLoading(false);
+      } catch (err) {
+        setError('Error al obtener los pagos del préstamo');
+        console.error(err);
+        setLoading(false);
+      }
+    };
+
+    fetchPagosPrestamo();
   }, [prestamo_id]);
 
   const handleNuevoPagoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,30 +78,41 @@ function DetallePrestamo() {
     });
   };
 
-  const formatCurrency = (value: string | number) => {
-    const number = typeof value === 'string' ? parseFloat(value) : value;
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
+  const guardarCambios = async () => {
+    try {
+      const formattedPago = {
+        prestamo_id: Number(prestamo_id), // Enviamos el prestamo_id
+        monto_pagado: parseFloat(nuevoPago.montoPago), // Enviamos el monto pagado como número
+      };
+
+      // Llamada a la API para agregar el pago
+      await addPago(formattedPago);
+
+      // Mostrar mensaje de éxito en el modal
+      setModalMessage('Pago agregado exitosamente');
+      setIsModalOpen(true);
+
+      // Recargar la página después de 2 segundos
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+      setModalMessage('Error al agregar el pago');
+      setIsModalOpen(true);
+    }
   };
 
-  const guardarCambios = () => {
-    // Formatear el monto del pago a moneda
-    const formattedPago = {
-      ...nuevoPago,
-      montoPago: formatCurrency(nuevoPago.montoPago)
-    };
-
-    // Guardar el nuevo pago en el estado
-    setPagos([...pagos, formattedPago]);
-    
-    // Limpiar los campos del nuevo pago para permitir más entradas, pero mantener la fecha actual
-    setNuevoPago({
-      ...nuevoPago,
-      montoPago: '',
-      fechaPago: getCurrentDate(), // Mantener la fecha actual en cada nuevo registro
-    });
-
-    // Aquí puedes realizar una llamada a la API para persistir los datos en el backend
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
+
+  if (loading) {
+    return <div>Cargando pagos del préstamo...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="detalle-prestamo-container">
@@ -118,9 +151,7 @@ function DetallePrestamo() {
                 placeholder="Ingresa el monto"
               />
             </td>
-            <td>
-              {nuevoPago.fechaPago} {/* Mostrar la fecha actual como texto */}
-            </td>
+            <td>{nuevoPago.fechaPago}</td>
           </tr>
         </tbody>
       </table>
@@ -130,6 +161,9 @@ function DetallePrestamo() {
       <button className="back-button" onClick={() => navigate(-1)}>
         Regresar a Detalle de Grupo
       </button>
+
+      {/* Modal para mostrar mensajes */}
+      <ModalAlertas message={modalMessage} isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 }

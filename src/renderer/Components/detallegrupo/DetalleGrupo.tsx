@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DetalleGrupo.css';
+import { getPrestamosByGrupo } from './api';
 
 interface Prestamo {
-  cliente: string;
-  aval: string;
-  fechaInicio: string;
-  prestamo: string;
-  tipo: number;
-  numPagos: number;
-  semanasDebe: number;
-  prestamo_id: number; // Nuevo campo para manejar el ID del préstamo
+  AVAL: string;
+  CLIENTE: string;
+  FECHA_PRÉSTAMO: string;
+  GRUPO: string;
+  MONTO_PRÉSTAMO: number;
+  NUMERO_PAGOS: number;
+  SEMANAS_QUE_DEBE: number;
+  TIPO_PRESTAMO: string;
+  prestamo_id: number;
 }
 
 function DetalleGrupo() {
-  const { grupo_id } = useParams(); // Obtener el grupo_id desde la URL
+  const { grupo_id } = useParams<{ grupo_id: string }>(); // Obtener el grupo_id desde la URL
   const navigate = useNavigate();
-  
+
   const [prestamos, setPrestamos] = useState<Prestamo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,11 +26,8 @@ function DetalleGrupo() {
   useEffect(() => {
     const fetchPrestamosGrupo = async () => {
       try {
-        const prestamosGrupo = [
-          { cliente: 'Javier Lopez', aval: '', fechaInicio: '2023-01-01', prestamo: '$5,000.00', tipo: 14, numPagos: 9, semanasDebe: 6, prestamo_id: 1 },
-          { cliente: 'Salvador Cardona', aval: 'Javier Lopez', fechaInicio: '2023-02-01', prestamo: '$3,000.00', tipo: 14, numPagos: 9, semanasDebe: 5, prestamo_id: 2 }
-        ];
-        setPrestamos(prestamosGrupo);
+        const data = await getPrestamosByGrupo(Number(grupo_id));
+        setPrestamos(data.prestamos);
         setLoading(false);
       } catch (err) {
         setError('Error al obtener los préstamos del grupo');
@@ -48,6 +47,7 @@ function DetalleGrupo() {
   }
 
   // Función para redirigir al detalle del préstamo
+  // Función para redirigir al detalle del préstamo
   const handleRowClick = (prestamo_id: number) => {
     navigate(`/detalle-prestamo/${prestamo_id}`);
   };
@@ -60,8 +60,8 @@ function DetalleGrupo() {
           <tr>
             <th>CLIENTE</th>
             <th>AVAL</th>
-            <th>FECHA DE INICIO</th>
-            <th>PRÉSTAMO</th>
+            <th>FECHA DE PRÉSTAMO</th>
+            <th>MONTO PRÉSTAMO</th>
             <th>TIPO</th>
             <th># de Pagos</th>
             <th>Semanas que debe</th>
@@ -69,19 +69,23 @@ function DetalleGrupo() {
         </thead>
         <tbody>
           {prestamos.map((prestamo, index) => (
-            <tr key={index} onClick={() => handleRowClick(prestamo.prestamo_id)} className="clickable-row">
-              <td>{prestamo.cliente}</td>
-              <td>{prestamo.aval}</td>
-              <td>{prestamo.fechaInicio}</td>
-              <td>{prestamo.prestamo}</td>
-              <td>{prestamo.tipo}</td>
-              <td>{prestamo.numPagos}</td>
-              <td>{prestamo.semanasDebe}</td>
+            <tr
+              key={index}
+              onClick={() => handleRowClick(prestamo.prestamo_id)}
+              className="clickable-row"
+            >
+              <td>{prestamo.CLIENTE}</td>
+              <td>{prestamo.AVAL}</td>
+              <td>{prestamo.FECHA_PRÉSTAMO}</td>
+              <td>{prestamo.MONTO_PRÉSTAMO}</td>
+              <td>{prestamo.TIPO_PRESTAMO}</td>
+              <td>{prestamo.NUMERO_PAGOS}</td>
+              <td>{prestamo.SEMANAS_QUE_DEBE}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      
+
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard
       </button>
