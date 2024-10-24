@@ -7,6 +7,20 @@
   margin-top: 20px; /* Añade un margen superior para separar el contenido de la parte superior */
 }
 
+.selector-grupo {
+  display: flex;
+  align-items: center; /* Alinea verticalmente el label y el selector */
+  margin-bottom: 10px; /* Reduce el espacio debajo del selector */
+}
+
+.selector-grupo label {
+  margin-right: 10px; /* Espacio entre el texto del label y el selector */
+}
+
+.corte-table-container {
+  margin-top: 10px; /* Reduce el espacio entre el selector de grupo y la tabla */
+}
+
 .corte-table {
   width: 50%; /* Ajusta el ancho de la tabla según lo necesites */
   border-collapse: collapse;
