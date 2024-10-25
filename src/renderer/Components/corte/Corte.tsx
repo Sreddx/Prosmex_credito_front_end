@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Corte.css';
-import { getGrupos, Grupo } from './api'; // Asegúrate de estar utilizando el mismo archivo api.ts
+import { getDatosCorte, createCorte, CorteData } from './api';
+import ModalAlertas from '../modalAlertas/ModalAlertas';
 
 interface Concepto {
   concepto: string;
@@ -15,32 +16,24 @@ function Corte() {
   const [nuevoMonto, setNuevoMonto] = useState<number | ''>('');
   const [nuevasNotas, setNuevasNotas] = useState<string>('');
   const [sobranteCobranza, setSobranteCobranza] = useState<number>(0);
+  const [bono, setBono] = useState<number>(0);
   const [montoSemilla, setMontoSemilla] = useState<number>(0);
-  const [bono, setBono] = useState<number>(0); // Bono obtenido del backend
-  const [grupos, setGrupos] = useState<Grupo[]>([]); 
-  const [grupoSeleccionado, setGrupoSeleccionado] = useState<number | ''>('');
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchGrupos = async () => {
+    const fetchDatosCorte = async () => {
       try {
-        const data = await getGrupos();
-        setGrupos(data || []);
+        const { sobrante_total, bono_global } = await getDatosCorte();
+        setSobranteCobranza(sobrante_total);
+        setBono(bono_global);
       } catch (error) {
-        console.error('Error al obtener los grupos:', error);
-        setGrupos([]);
+        console.error('Error al obtener los datos de corte:', error);
       }
     };
-    fetchGrupos();
 
-    // Simulación de obtener "bono" desde el backend
-    const fetchBono = async () => {
-      // Suponiendo que la llamada para obtener el bono es exitosa
-      const bonoData = 100; // Bono ficticio
-      setBono(bonoData);
-    };
-    fetchBono();
+    fetchDatosCorte();
   }, []);
 
   const handleAgregarConcepto = () => {
@@ -65,27 +58,33 @@ function Corte() {
     return sobranteCobranza - calcularTotal() - bono + montoSemilla;
   };
 
+  const handleGuardarCorte = async () => {
+    const corteData: CorteData = {
+      corte_total: calcularCorteTotal(),
+      total_gastos: calcularTotal(),
+      semilla: montoSemilla,
+    };
+
+    try {
+      await createCorte(corteData);
+      setModalMessage('Corte guardado con éxito');
+      setIsModalOpen(true);
+
+      // Cerrar el modal y redirigir al dashboard después de 2 segundos
+      setTimeout(() => {
+        setIsModalOpen(false);
+        navigate('/dashboard');
+      }, 2000);
+    } catch (error) {
+      setModalMessage('Error al guardar el corte');
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <div className="corte-container">
       <h1>Corte de Gastos</h1>
 
-      {/* Selector de Grupo */}
-      <div className="selector-grupo">
-        <label>Selecciona el Grupo:</label>
-        <select
-          value={grupoSeleccionado}
-          onChange={(e) => setGrupoSeleccionado(Number(e.target.value))}
-        >
-          <option value="">Selecciona un grupo</option>
-          {grupos && grupos.map((grupo) => (
-            <option key={grupo.id} value={grupo.id}>
-              {grupo.nombre}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Tabla de conceptos */}
       <div className="corte-table-container">
         <table className="corte-table">
           <thead>
@@ -139,22 +138,18 @@ function Corte() {
         Agregar Concepto
       </button>
 
-      {/* Total Gastos */}
       <div className="corte-total">
         <strong>Total Gastos:</strong> ${calcularTotal().toFixed(2)}
       </div>
 
-      {/* Sobrante de cobranza */}
       <div className="sobrante-cobranza">
         <strong>Sobrante de Cobranza:</strong> ${sobranteCobranza.toFixed(2)}
       </div>
 
-      {/* Bono */}
       <div className="corte-bono">
         <strong>Bono:</strong> ${bono.toFixed(2)}
       </div>
 
-      {/* Monto Semilla */}
       <div className="semilla-input">
         <label>Monto Semilla:</label>
         <input
@@ -164,18 +159,19 @@ function Corte() {
         />
       </div>
 
-      {/* Corte Total */}
       <div className="corte-final-total">
         <strong>Corte Total:</strong> ${calcularCorteTotal().toFixed(2)}
       </div>
 
-      <button className="guardar-button" onClick={() => console.log("Guardar Corte")}>
+      <button className="guardar-button" onClick={handleGuardarCorte}>
         Guardar Corte
       </button>
 
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard
       </button>
+
+      <ModalAlertas message={modalMessage} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
