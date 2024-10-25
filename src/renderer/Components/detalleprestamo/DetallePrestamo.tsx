@@ -18,16 +18,12 @@ function DetallePrestamo() {
   const [pagos, setPagos] = useState<Pago[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
-  const [modalMessage, setModalMessage] = useState<string>(''); // Mensaje del modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   const getCurrentDate = (): string => {
     const date = new Date();
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return date.toISOString().split('T')[0];
   };
 
   const [nuevoPago, setNuevoPago] = useState<Pago>({
@@ -42,16 +38,13 @@ function DetallePrestamo() {
     const fetchPagosPrestamo = async () => {
       try {
         const data = await getPagosByPrestamo(Number(prestamo_id));
-
-        // Mapeamos los campos de la respuesta a los que espera el componente
         const pagosMapeados = data.pagos.map((pago: any) => ({
           grupo: pago.GRUPO,
           cliente: pago.CLIENTE,
-          montoPrestamo: pago.MONTO_PRESTAMO.toString(), // Convertimos el monto a string
+          montoPrestamo: pago.MONTO_PRESTAMO.toString(),
           montoPago: pago.MONTO_PAGO.toString(),
           fechaPago: pago.FECHA_PAGO,
         }));
-
         setPagos(pagosMapeados);
         setNuevoPago({
           grupo: pagosMapeados[0]?.grupo || '',
@@ -67,7 +60,6 @@ function DetallePrestamo() {
         setLoading(false);
       }
     };
-
     fetchPagosPrestamo();
   }, [prestamo_id]);
 
@@ -81,20 +73,18 @@ function DetallePrestamo() {
   const guardarCambios = async () => {
     try {
       const formattedPago = {
-        prestamo_id: Number(prestamo_id), // Enviamos el prestamo_id
-        monto_pagado: parseFloat(nuevoPago.montoPago), // Enviamos el monto pagado como número
+        prestamo_id: Number(prestamo_id),
+        monto_pagado: parseFloat(nuevoPago.montoPago),
       };
-
-      // Llamada a la API para agregar el pago
       await addPago(formattedPago);
 
-      // Mostrar mensaje de éxito en el modal
       setModalMessage('Pago agregado exitosamente');
       setIsModalOpen(true);
 
-      // Recargar la página después de 2 segundos
+      // Redirigir a la pantalla anterior después de 2 segundos
       setTimeout(() => {
-        window.location.reload();
+        setIsModalOpen(false);
+        navigate(-1); // Regresar a la pantalla anterior
       }, 2000);
     } catch (err) {
       setModalMessage('Error al agregar el pago');
@@ -137,7 +127,6 @@ function DetallePrestamo() {
               <td>{pago.fechaPago}</td>
             </tr>
           ))}
-          {/* Nueva fila para agregar pago */}
           <tr>
             <td>{nuevoPago.grupo}</td>
             <td>{nuevoPago.cliente}</td>
@@ -161,8 +150,6 @@ function DetallePrestamo() {
       <button className="back-button" onClick={() => navigate(-1)}>
         Regresar a Detalle de Grupo
       </button>
-
-      {/* Modal para mostrar mensajes */}
       <ModalAlertas message={modalMessage} isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
