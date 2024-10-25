@@ -1,5 +1,5 @@
-productName: 'ReactElectron'
-appId: 'org.StackOutput.ReactElectron'
+productName: 'Prosmex App'
+appId: 'Prosmex.Output.ReactElectron'
 copyright: 'Copyright © 2022 StackOutput'
 artifactName: '${productName}-${version}.${ext}'
 
@@ -20,7 +20,7 @@ directories:
 
 # Windows Configuration
 win:
-  icon: './assets/icon.ico'
+  icon: './assets/icono-prosmex.ico'
   target:
     - 'zip'
     - 'nsis'
@@ -30,9 +30,9 @@ win:
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: false
-  installerIcon: './assets/icon.ico'
-  uninstallerIcon: './assets/icon.ico'
-  uninstallDisplayName: 'ReactElectron'
+  installerIcon: './assets/icono-prosmex.ico'
+  uninstallerIcon: './assets/icono-prosmex.ico'
+  uninstallDisplayName: 'ProsmexApp'
   license: './LICENSE'
   # perMachine: true # Per Machine Configuration
 
