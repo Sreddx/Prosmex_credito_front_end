@@ -16,7 +16,8 @@ function Corte() {
   const [nuevasNotas, setNuevasNotas] = useState<string>('');
   const [sobranteCobranza, setSobranteCobranza] = useState<number>(0);
   const [montoSemilla, setMontoSemilla] = useState<number>(0);
-  const [grupos, setGrupos] = useState<Grupo[]>([]); // Inicializado como arreglo vacío
+  const [bono, setBono] = useState<number>(0); // Bono obtenido del backend
+  const [grupos, setGrupos] = useState<Grupo[]>([]); 
   const [grupoSeleccionado, setGrupoSeleccionado] = useState<number | ''>('');
 
   const navigate = useNavigate();
@@ -24,14 +25,22 @@ function Corte() {
   useEffect(() => {
     const fetchGrupos = async () => {
       try {
-        const data = await getGrupos(); // Llamada al mismo endpoint que en pagos
-        setGrupos(data || []); // Asegúrate de que data es un array
+        const data = await getGrupos();
+        setGrupos(data || []);
       } catch (error) {
         console.error('Error al obtener los grupos:', error);
-        setGrupos([]); // Si hay error, inicializa como un arreglo vacío
+        setGrupos([]);
       }
     };
     fetchGrupos();
+
+    // Simulación de obtener "bono" desde el backend
+    const fetchBono = async () => {
+      // Suponiendo que la llamada para obtener el bono es exitosa
+      const bonoData = 100; // Bono ficticio
+      setBono(bonoData);
+    };
+    fetchBono();
   }, []);
 
   const handleAgregarConcepto = () => {
@@ -53,7 +62,7 @@ function Corte() {
   };
 
   const calcularCorteTotal = () => {
-    return sobranteCobranza - calcularTotal() + montoSemilla;
+    return sobranteCobranza - calcularTotal() - bono + montoSemilla;
   };
 
   return (
@@ -68,7 +77,7 @@ function Corte() {
           onChange={(e) => setGrupoSeleccionado(Number(e.target.value))}
         >
           <option value="">Selecciona un grupo</option>
-          {grupos && grupos.map((grupo) => ( // Aseguramos que grupos exista y sea un arreglo
+          {grupos && grupos.map((grupo) => (
             <option key={grupo.id} value={grupo.id}>
               {grupo.nombre}
             </option>
@@ -130,19 +139,19 @@ function Corte() {
         Agregar Concepto
       </button>
 
-      {/* Sobrante de cobranza */}
-      <div className="sobrante-cobranza">
-        <label>Sobrante de Cobranza:</label>
-        <input
-          type="number"
-          value={sobranteCobranza}
-          onChange={(e) => setSobranteCobranza(Number(e.target.value))}
-        />
-      </div>
-
       {/* Total Gastos */}
       <div className="corte-total">
         <strong>Total Gastos:</strong> ${calcularTotal().toFixed(2)}
+      </div>
+
+      {/* Sobrante de cobranza */}
+      <div className="sobrante-cobranza">
+        <strong>Sobrante de Cobranza:</strong> ${sobranteCobranza.toFixed(2)}
+      </div>
+
+      {/* Bono */}
+      <div className="corte-bono">
+        <strong>Bono:</strong> ${bono.toFixed(2)}
       </div>
 
       {/* Monto Semilla */}
@@ -159,6 +168,10 @@ function Corte() {
       <div className="corte-final-total">
         <strong>Corte Total:</strong> ${calcularCorteTotal().toFixed(2)}
       </div>
+
+      <button className="guardar-button" onClick={() => console.log("Guardar Corte")}>
+        Guardar Corte
+      </button>
 
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard

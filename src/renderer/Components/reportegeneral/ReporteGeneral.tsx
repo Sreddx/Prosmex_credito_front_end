@@ -105,8 +105,8 @@ function ReporteGeneral() {
             <th>GRUPO</th>
             <th>COB IDEAL</th>
             <th>COB REAL</th>
-            <th>PRESTAMO PAPEL</th>
             <th>PRESTAMO REAL</th>
+            <th>PRESTAMO PAPEL</th>
             <th>NUMERO DE CREDITOS (TOTAL)</th>
             <th>NUMERO DE PRESTAMOS (SEMANAL)</th>
             <th>MOROSIDAD $$$</th>

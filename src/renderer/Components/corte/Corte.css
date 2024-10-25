@@ -1,28 +1,28 @@
 .corte-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Mantiene el contenido centrado horizontalmente */
-  justify-content: flex-start; /* Alinea el contenido hacia la parte superior */
+  align-items: center;
+  justify-content: flex-start;
   padding: 20px;
-  margin-top: 20px; /* Añade un margen superior para separar el contenido de la parte superior */
+  margin-top: 20px;
 }
 
 .selector-grupo {
   display: flex;
-  align-items: center; /* Alinea verticalmente el label y el selector */
-  margin-bottom: 10px; /* Reduce el espacio debajo del selector */
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .selector-grupo label {
-  margin-right: 10px; /* Espacio entre el texto del label y el selector */
+  margin-right: 10px;
 }
 
 .corte-table-container {
-  margin-top: 10px; /* Reduce el espacio entre el selector de grupo y la tabla */
+  margin-top: 10px;
 }
 
 .corte-table {
-  width: 50%; /* Ajusta el ancho de la tabla según lo necesites */
+  width: 50%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -38,13 +38,21 @@
   background-color: #f0f0f0;
 }
 
-/* Estilos para el sobrante de cobranza, total de gastos y corte total */
+/* Estilos para el sobrante de cobranza, bono, total de gastos y corte total */
 .sobrante-cobranza,
+.corte-bono,
 .corte-total,
 .corte-final-total {
   margin-top: 20px;
   font-size: 1.2em;
   font-weight: bold;
+}
+
+.sobrante-cobranza strong,
+.corte-bono strong,
+.corte-total strong,
+.corte-final-total strong {
+  margin-right: 10px;
 }
 
 .semilla-input {
@@ -84,5 +92,14 @@ button:hover {
 }
 
 .add-button:hover {
+  background-color: #0056b3;
+}
+
+.guardar-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.guardar-button:hover {
   background-color: #0056b3;
 }
