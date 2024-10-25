@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ReporteGeneral.css';
-import { getReporteGeneral, ReporteData } from './api'; // Ajusta la ruta según sea necesario
-import * as XLSX from 'xlsx';  // Importamos la biblioteca xlsx
+import { getReporteGeneral, ReporteData } from './api';
+import * as XLSX from 'xlsx';
 
 function ReporteGeneral() {
   const [reporteData, setReporteData] = useState<ReporteData[]>([]);
@@ -31,10 +31,6 @@ function ReporteGeneral() {
   const calculateTotals = (data: ReporteData[]) => {
     const totals: Partial<ReporteData> = {
       gerente: 'TOTALES',
-      supervisor: '',
-      titular: '',
-      ruta: '',
-      grupo: '',
       cobranza_ideal: 0,
       cobranza_real: 0,
       prestamo_papel: 0,
@@ -45,6 +41,7 @@ function ReporteGeneral() {
       morosidad_porcentaje: null,
       porcentaje_prestamo: null,
       sobrante: 0,
+      bono: 0, // Inicializar el bono total
     };
 
     data.forEach((row) => {
@@ -56,19 +53,11 @@ function ReporteGeneral() {
       totals.numero_de_prestamos! += row.numero_de_prestamos || 0;
       totals.morosidad_monto! += row.morosidad_monto || 0;
       totals.sobrante! += row.sobrante || 0;
+      totals.bono! += row.bono || 0; // Sumar bono
     });
 
-    if (totals.cobranza_ideal! !== 0) {
-      totals.morosidad_porcentaje = totals.morosidad_monto! / totals.cobranza_ideal!;
-    } else {
-      totals.morosidad_porcentaje = null;
-    }
-
-    if (totals.prestamo_real! !== 0) {
-      totals.porcentaje_prestamo = totals.cobranza_real! / totals.prestamo_real!;
-    } else {
-      totals.porcentaje_prestamo = null;
-    }
+    totals.morosidad_porcentaje = totals.cobranza_ideal ? totals.morosidad_monto! / totals.cobranza_ideal : null;
+    totals.porcentaje_prestamo = totals.prestamo_real ? totals.cobranza_real! / totals.prestamo_real : null;
 
     setTotals(totals);
   };
@@ -91,10 +80,7 @@ function ReporteGeneral() {
   return (
     <div className="reporte-general-container">
       <h1>Reporte General</h1>
-
-      {/* Botón para exportar a Excel */}
       <button onClick={exportToExcel} className="export-button">Exportar a Excel</button>
-
       <table className="reporte-table">
         <thead>
           <tr>
@@ -107,78 +93,70 @@ function ReporteGeneral() {
             <th>COB REAL</th>
             <th>PRESTAMO REAL</th>
             <th>PRESTAMO PAPEL</th>
-            <th>NUMERO DE CREDITOS (TOTAL)</th>
-            <th>NUMERO DE PRESTAMOS (SEMANAL)</th>
+            <th>NUMERO DE CREDITOS</th>
+            <th>NUMERO DE PRESTAMOS</th>
             <th>MOROSIDAD $$$</th>
             <th>MOROSIDAD %</th>
-            <th>BONO</th>
+            <th>BONO</th> {/* Agregar la columna del bono */}
             <th>% PRESTAMO</th>
             <th>SOBRANTE</th>
           </tr>
         </thead>
         <tbody>
           {reporteData.map((row, index) => (
-            <tr
-              key={index}
-              className="clickable-row"
-              onClick={() => navigate(`/detalle-grupo/${row.grupo_id}`)}
-            >
+            <tr key={index}>
               <td>{row.gerente || 'N/A'}</td>
               <td>{row.supervisor || 'N/A'}</td>
               <td>{row.titular || 'N/A'}</td>
               <td>{row.ruta || 'N/A'}</td>
               <td>{row.grupo || 'N/A'}</td>
-              <td>{row.cobranza_ideal !== null ? row.cobranza_ideal.toFixed(2) : '0.00'}</td>
-              <td>{row.cobranza_real !== null ? row.cobranza_real.toFixed(2) : '0.00'}</td>
-              <td>{row.prestamo_papel !== null ? row.prestamo_papel.toFixed(2) : '0.00'}</td>
-              <td>{row.prestamo_real !== null ? row.prestamo_real.toFixed(2) : '0.00'}</td>
-              <td>{row.numero_de_creditos !== null ? row.numero_de_creditos : '0'}</td>
-              <td>{row.numero_de_prestamos !== null ? row.numero_de_prestamos : '0'}</td>
-              <td>{row.morosidad_monto !== null ? row.morosidad_monto.toFixed(2) : '0.00'}</td>
+              <td>{row.cobranza_ideal.toFixed(2)}</td>
+              <td>{row.cobranza_real.toFixed(2)}</td>
+              <td>{row.prestamo_real.toFixed(2)}</td>
+              <td>{row.prestamo_papel.toFixed(2)}</td>
+              <td>{row.numero_de_creditos}</td>
+              <td>{row.numero_de_prestamos}</td>
+              <td>{row.morosidad_monto.toFixed(2)}</td>
               <td>
                 {row.morosidad_porcentaje !== null
                   ? `${(row.morosidad_porcentaje * 100).toFixed(2)}%`
                   : 'N/A'}
               </td>
-              <td>{/* BONO calculation here, if applicable */}</td>
+              <td>{row.bono.toFixed(2)}</td> {/* Mostrar el bono */}
               <td>
                 {row.porcentaje_prestamo !== null
                   ? `${(row.porcentaje_prestamo * 100).toFixed(2)}%`
                   : 'N/A'}
               </td>
-              <td>{row.sobrante !== null ? row.sobrante.toFixed(2) : '0.00'}</td>
+              <td>{row.sobrante.toFixed(2)}</td>
             </tr>
           ))}
-          {reporteData.length > 0 && (
-            <tr>
-              <td>{totals.gerente || 'N/A'}</td>
-              <td>{totals.supervisor || ''}</td>
-              <td>{totals.titular || ''}</td>
-              <td>{totals.ruta || ''}</td>
-              <td>{totals.grupo || ''}</td>
-              <td>{totals.cobranza_ideal !== null ? totals.cobranza_ideal.toFixed(2) : '0.00'}</td>
-              <td>{totals.cobranza_real !== null ? totals.cobranza_real.toFixed(2) : '0.00'}</td>
-              <td>{totals.prestamo_papel !== null ? totals.prestamo_papel.toFixed(2) : '0.00'}</td>
-              <td>{totals.prestamo_real !== null ? totals.prestamo_real.toFixed(2) : '0.00'}</td>
-              <td>{totals.numero_de_creditos !== null ? totals.numero_de_creditos : '0'}</td>
-              <td>{totals.numero_de_prestamos !== null ? totals.numero_de_prestamos : '0'}</td>
-              <td>
-                {totals.morosidad_monto !== null ? totals.morosidad_monto.toFixed(2) : '0.00'}
-              </td>
-              <td>
-                {totals.morosidad_porcentaje !== null
-                  ? `${(totals.morosidad_porcentaje * 100).toFixed(2)}%`
-                  : 'N/A'}
-              </td>
-              <td>{/* BONO total calculation */}</td>
-              <td>
-                {totals.porcentaje_prestamo !== null
-                  ? `${(totals.porcentaje_prestamo * 100).toFixed(2)}%`
-                  : 'N/A'}
-              </td>
-              <td>{totals.sobrante !== null ? totals.sobrante.toFixed(2) : '0.00'}</td>
-            </tr>
-          )}
+          <tr>
+            <td>{totals.gerente}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{totals.cobranza_ideal?.toFixed(2)}</td>
+            <td>{totals.cobranza_real?.toFixed(2)}</td>
+            <td>{totals.prestamo_real?.toFixed(2)}</td>
+            <td>{totals.prestamo_papel?.toFixed(2)}</td>
+            <td>{totals.numero_de_creditos}</td>
+            <td>{totals.numero_de_prestamos}</td>
+            <td>{totals.morosidad_monto?.toFixed(2)}</td>
+            <td>
+              {totals.morosidad_porcentaje !== null
+                ? `${(totals.morosidad_porcentaje * 100).toFixed(2)}%`
+                : 'N/A'}
+            </td>
+            <td>{totals.bono?.toFixed(2)}</td> {/* Mostrar total del bono */}
+            <td>
+              {totals.porcentaje_prestamo !== null
+                ? `${(totals.porcentaje_prestamo * 100).toFixed(2)}%`
+                : 'N/A'}
+            </td>
+            <td>{totals.sobrante?.toFixed(2)}</td>
+          </tr>
         </tbody>
       </table>
     </div>

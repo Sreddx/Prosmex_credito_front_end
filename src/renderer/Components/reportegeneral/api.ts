@@ -20,6 +20,7 @@ export interface ReporteData {
   morosidad_porcentaje: number;
   porcentaje_prestamo: number | null;
   sobrante: number;
+  bono: number;
 }
 
 export const getReporteGeneral = async (): Promise<ReporteData[]> => {
