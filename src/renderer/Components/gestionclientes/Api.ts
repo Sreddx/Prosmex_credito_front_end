@@ -5,6 +5,7 @@ import { Cliente, CreateClienteResponse, ErrorResponse } from '../../types';
 export const listClientes = async (): Promise<Cliente[] | ErrorResponse> => {
   try {
     const response = await apiClient.get<{ data: Cliente[] }>('/clientes/');
+    console.log(response);
     return Array.isArray(response.data.data) ? response.data.data : []; // Asegúrate de devolver el array 'data'
   } catch (error: any) {
     return { error: error.response?.data?.message || 'Error fetching clients' };
