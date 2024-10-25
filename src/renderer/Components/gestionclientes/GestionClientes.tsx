@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listClientes } from './Api'; // Ajusta la ruta según tu estructura
+import { listClientes, updateCliente } from './Api'; // Ajusta la ruta según tu estructura
 import { Cliente } from '../../types';
 import './GestionClientes.css';
+import ModalAlertas from '../modalAlertas/ModalAlertas'; // Importa ModalAlertas para mostrar mensajes de confirmación
 
 function GestionClientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [clientesEditados, setClientesEditados] = useState<Cliente[]>([]);
+  const [modalMessage, setModalMessage] = useState<string>('');  // Estado para el mensaje del modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);  // Estado para controlar la visibilidad del modal
   const navigate = useNavigate();
 
   // Función para obtener la lista de clientes
@@ -26,6 +30,41 @@ function GestionClientes() {
 
     fetchClientes();
   }, []);
+
+  // Función para manejar cambios en el campo "Es Aval"
+  const handleEsAvalChange = (id: number, esAval: boolean) => {
+    const nuevosClientes = clientes.map((cliente) => 
+      cliente.id === id ? { ...cliente, es_aval: esAval } : cliente
+    );
+    setClientes(nuevosClientes);
+
+    // Mantener una lista de clientes editados
+    const clienteEditado = nuevosClientes.find(cliente => cliente.id === id);
+    if (clienteEditado && !clientesEditados.some(c => c.id === id)) {
+      setClientesEditados([...clientesEditados, clienteEditado]);
+    }
+  };
+
+  // Función para guardar los cambios
+  const handleGuardarCambios = async () => {
+    try {
+      for (const cliente of clientesEditados) {
+        await updateCliente(cliente.id, { es_aval: cliente.es_aval });
+      }
+      setClientesEditados([]); // Limpiar la lista de clientes editados después de guardar
+      setModalMessage('Cambios guardados con éxito');
+      setIsModalOpen(true);  // Mostrar el modal de éxito
+
+      // Cerrar el modal y redirigir después de 2 segundos
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 2000);
+    } catch (error) {
+      console.error('Error al guardar los cambios:', error);
+      setModalMessage('Hubo un error al guardar los cambios.');
+      setIsModalOpen(true);  // Mostrar el modal de error
+    }
+  };
 
   return (
     <div className="gestion-clientes-container">
@@ -61,15 +100,37 @@ function GestionClientes() {
               <td>{cliente.estado_civil}</td>
               <td>{cliente.num_hijos}</td>
               <td>{cliente.propiedad}</td>
-              <td>{cliente.es_aval ? 'Sí' : 'No'}</td>
+              <td>
+                <select
+                  value={cliente.es_aval ? 'Sí' : 'No'}
+                  onChange={(e) =>
+                    handleEsAvalChange(cliente.id, e.target.value === 'Sí')
+                  }
+                >
+                  <option value="Sí">Sí</option>
+                  <option value="No">No</option>
+                </select>
+              </td>
               <td>{cliente.grupo_id}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      
+      <button className="save-button" onClick={handleGuardarCambios}>
+        Guardar cambios
+      </button>
+      
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
         Regresar al Dashboard
       </button>
+
+      {/* Modal de confirmación */}
+      <ModalAlertas
+        message={modalMessage}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

@@ -6,26 +6,77 @@
 }
 
 .gestion-clientes-table {
-  width: 90%; /* Cambia el ancho a 90% para dejar márgenes laterales */
+  width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.gestion-clientes-table th,
+.gestion-clientes-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
 }
 
-.gestion-clientes-table th, .gestion-clientes-table td {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-}
-
 .gestion-clientes-table th {
-  background-color: #f4f4f4;
+  background-color: #f0f0f0;
 }
 
-.gestion-clientes-table tr:nth-of-type(even) {
-  background-color: #f9f9f9;
+.gestion-clientes-container h1 {
+  text-align: center;
 }
 
+/* Botón "Guardar cambios" */
+.save-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+/* Modal similar al de la pantalla de préstamos */
+.modal-alertas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-alertas-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-alertas-content button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.modal-alertas-content button:hover {
+  background: #0056b3;
+}
+
+/* Botón "Regresar al Dashboard" */
 .back-button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -34,7 +85,6 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center;
 }
 
 .back-button:hover {
