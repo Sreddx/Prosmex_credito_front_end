@@ -3,13 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import './ReporteGeneral.css';
 import * as XLSX from 'xlsx';
 import { getReporteGeneral, ReporteData } from './api';
+import { useAuth } from '../../context/AuthContext'; // Importa el contexto de autenticación con la ruta correcta
 
 function ReporteGeneral() {
+  const { user } = useAuth(); // Obtiene el usuario autenticado del contexto
   const [reporteData, setReporteData] = useState<ReporteData[]>([]);
   const [totals, setTotals] = useState<Partial<ReporteData>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
+
+  const formatCurrency = (value: number | undefined) => {
+    return value !== undefined
+      ? new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value)
+      : 'N/A';
+  };
 
   useEffect(() => {
     const fetchReporte = async () => {
@@ -41,7 +49,7 @@ function ReporteGeneral() {
       morosidad_porcentaje: null,
       porcentaje_prestamo: null,
       sobrante: 0,
-      bono: 0, // Inicializar el bono total
+      bono: 0,
     };
 
     data.forEach((row) => {
@@ -53,7 +61,7 @@ function ReporteGeneral() {
       totals.numero_de_prestamos! += row.numero_de_prestamos || 0;
       totals.morosidad_monto! += row.morosidad_monto || 0;
       totals.sobrante! += row.sobrante || 0;
-      totals.bono! += row.bono || 0; // Sumar bono
+      totals.bono! += row.bono || 0;
     });
 
     totals.morosidad_porcentaje = totals.cobranza_ideal
@@ -84,9 +92,11 @@ function ReporteGeneral() {
   return (
     <div className="reporte-general-container">
       <h1>Reporte General</h1>
-      <button onClick={exportToExcel} className="export-button">
-        Exportar a Excel
-      </button>
+      {user?.rol_id === 6 && ( // Verifica si el usuario tiene el rol de "Admin" (rol_id === 6)
+        <button onClick={exportToExcel} className="export-button">
+          Exportar a Excel
+        </button>
+      )}
       <table className="reporte-table">
         <thead>
           <tr>
@@ -97,8 +107,8 @@ function ReporteGeneral() {
             <th>GRUPO</th>
             <th>COB IDEAL</th>
             <th>COB REAL</th>
-            <th>PRESTAMO REAL</th>
             <th>PRESTAMO PAPEL</th>
+            <th>PRESTAMO REAL</th>
             <th>NUMERO DE CREDITOS</th>
             <th>NUMERO DE PRESTAMOS</th>
             <th>MOROSIDAD $$$</th>
@@ -120,25 +130,25 @@ function ReporteGeneral() {
               <td>{row.titular || 'N/A'}</td>
               <td>{row.ruta || 'N/A'}</td>
               <td>{row.grupo || 'N/A'}</td>
-              <td>{row.cobranza_ideal?.toFixed(2) || '0.00'}</td>
-              <td>{row.cobranza_real?.toFixed(2) || '0.00'}</td>
-              <td>{row.prestamo_papel?.toFixed(2) || '0.00'}</td>
-              <td>{row.prestamo_real?.toFixed(2) || '0.00'}</td>
+              <td>{formatCurrency(row.cobranza_ideal)}</td>
+              <td>{formatCurrency(row.cobranza_real)}</td>
+              <td>{formatCurrency(row.prestamo_papel)}</td>
+              <td>{formatCurrency(row.prestamo_real)}</td>
               <td>{row.numero_de_creditos || '0'}</td>
               <td>{row.numero_de_prestamos || '0'}</td>
-              <td>{row.morosidad_monto?.toFixed(2) || '0.00'}</td>
+              <td>{formatCurrency(row.morosidad_monto)}</td>
               <td>
                 {row.morosidad_porcentaje !== null
                   ? `${(row.morosidad_porcentaje * 100).toFixed(2)}%`
                   : 'N/A'}
               </td>
-              <td>{row.bono?.toFixed(2) || '0.00'}</td>
+              <td>{formatCurrency(row.bono)}</td>
               <td>
                 {row.porcentaje_prestamo !== null
                   ? `${(row.porcentaje_prestamo * 100).toFixed(2)}%`
                   : 'N/A'}
               </td>
-              <td>{row.sobrante?.toFixed(2) || '0.00'}</td>
+              <td>{formatCurrency(row.sobrante)}</td>
             </tr>
           ))}
           <tr>
@@ -147,25 +157,25 @@ function ReporteGeneral() {
             <td />
             <td />
             <td />
-            <td>{totals.cobranza_ideal?.toFixed(2)}</td>
-            <td>{totals.cobranza_real?.toFixed(2)}</td>
-            <td>{totals.prestamo_real?.toFixed(2)}</td>
-            <td>{totals.prestamo_papel?.toFixed(2)}</td>
+            <td>{formatCurrency(totals.cobranza_ideal)}</td>
+            <td>{formatCurrency(totals.cobranza_real)}</td>
+            <td>{formatCurrency(totals.prestamo_papel)}</td>
+            <td>{formatCurrency(totals.prestamo_real)}</td>
             <td>{totals.numero_de_creditos}</td>
             <td>{totals.numero_de_prestamos}</td>
-            <td>{totals.morosidad_monto?.toFixed(2)}</td>
+            <td>{formatCurrency(totals.morosidad_monto)}</td>
             <td>
               {totals.morosidad_porcentaje !== null
                 ? `${(totals.morosidad_porcentaje * 100).toFixed(2)}%`
                 : 'N/A'}
             </td>
-            <td>{totals.bono?.toFixed(2)}</td>
+            <td>{formatCurrency(totals.bono)}</td>
             <td>
               {totals.porcentaje_prestamo !== null
                 ? `${(totals.porcentaje_prestamo * 100).toFixed(2)}%`
                 : 'N/A'}
             </td>
-            <td>{totals.sobrante?.toFixed(2)}</td>
+            <td>{formatCurrency(totals.sobrante)}</td>
           </tr>
         </tbody>
       </table>

@@ -58,3 +58,19 @@
 .clickable-row:hover td {
   font-weight: bold; /* Hace que el texto sea negrita cuando pasa el ratón */
 }
+
+.guardar-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px; /* Reduce el padding para hacer el botón más pequeño */
+  font-size: 14px; /* Reduce el tamaño de la fuente */
+  cursor: pointer;
+  border-radius: 4px; /* Ajusta el borde redondeado */
+  margin-right: 10px;
+  transition: background-color 0.2s;
+}
+
+.guardar-button:hover {
+  background-color: #0069d9;
+}

@@ -12,7 +12,7 @@ function createWindow() {
     width: 1920,
     height: 1080,
     webPreferences: {
-      devTools: false,
+      devTools: true,
       preload: getPreloadPath('preload.js'),
       // nodeIntegration: true, // NODE.JS WILL AVAILABLE IN RENDERER
     },

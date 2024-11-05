@@ -21,6 +21,13 @@ function DetallePrestamo() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState<string>('');
 
+  const formatCurrency = (value: string) => {
+    const numberValue = parseFloat(value);
+    return isNaN(numberValue)
+      ? 'N/A'
+      : new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(numberValue);
+  };
+
   const getCurrentDate = (): string => {
     const date = new Date();
     return date.toISOString().split('T')[0];
@@ -81,10 +88,9 @@ function DetallePrestamo() {
       setModalMessage('Pago agregado exitosamente');
       setIsModalOpen(true);
 
-      // Redirigir a la pantalla anterior después de 2 segundos
       setTimeout(() => {
         setIsModalOpen(false);
-        navigate(-1); // Regresar a la pantalla anterior
+        navigate(-1);
       }, 2000);
     } catch (err) {
       setModalMessage('Error al agregar el pago');
@@ -122,15 +128,15 @@ function DetallePrestamo() {
             <tr key={index}>
               <td>{pago.grupo}</td>
               <td>{pago.cliente}</td>
-              <td>{pago.montoPrestamo}</td>
-              <td>{pago.montoPago}</td>
+              <td>{formatCurrency(pago.montoPrestamo)}</td>
+              <td>{formatCurrency(pago.montoPago)}</td>
               <td>{pago.fechaPago}</td>
             </tr>
           ))}
           <tr>
             <td>{nuevoPago.grupo}</td>
             <td>{nuevoPago.cliente}</td>
-            <td>{nuevoPago.montoPrestamo}</td>
+            <td>{formatCurrency(nuevoPago.montoPrestamo)}</td>
             <td>
               <input
                 type="text"
