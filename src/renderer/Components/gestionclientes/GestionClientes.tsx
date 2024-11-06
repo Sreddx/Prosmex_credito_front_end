@@ -9,38 +9,42 @@ function GestionClientes() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [clientesEditados, setClientesEditados] = useState<Cliente[]>([]);
-  const [modalMessage, setModalMessage] = useState<string>('');  // Estado para el mensaje del modal
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);  // Estado para controlar la visibilidad del modal
+  const [modalMessage, setModalMessage] = useState<string>(''); // Estado para el mensaje del modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Estado para controlar la visibilidad del modal
+  const [page, setPage] = useState<number>(1); // Estado para la página actual
+  const [totalPages, setTotalPages] = useState<number>(1); // Estado para el número total de páginas
   const navigate = useNavigate();
 
-  // Función para obtener la lista de clientes
-  useEffect(() => {
-    const fetchClientes = async () => {
-      try {
-        const response = await listClientes(); // Llamada al servicio API para listar clientes
-        if ('error' in response) {
-          setError(response.error);
-        } else {
-          setClientes(response); // Asignar clientes obtenidos del API
-        }
-      } catch (err) {
-        setError('Error al cargar los clientes');
+  // Función para obtener la lista de clientes con paginación
+  const fetchClientes = async () => {
+    try {
+      const response = await listClientes(page);
+      if ('error' in response) {
+        setError(response.error);
+      } else {
+        setClientes(response.clientes);
+        setTotalPages(response.total_pages); // Actualiza el total de páginas
       }
-    };
+    } catch (err) {
+      setError('Error al cargar los clientes');
+    }
+  };
 
+  // Actualizar la lista de clientes cada vez que la página cambia
+  useEffect(() => {
     fetchClientes();
-  }, []);
+  }, [page]);
 
   // Función para manejar cambios en el campo "Es Aval"
   const handleEsAvalChange = (id: number, esAval: boolean) => {
-    const nuevosClientes = clientes.map((cliente) => 
-      cliente.id === id ? { ...cliente, es_aval: esAval } : cliente
+    const nuevosClientes = clientes.map((cliente) =>
+      cliente.id === id ? { ...cliente, es_aval: esAval } : cliente,
     );
     setClientes(nuevosClientes);
 
     // Mantener una lista de clientes editados
-    const clienteEditado = nuevosClientes.find(cliente => cliente.id === id);
-    if (clienteEditado && !clientesEditados.some(c => c.id === id)) {
+    const clienteEditado = nuevosClientes.find((cliente) => cliente.id === id);
+    if (clienteEditado && !clientesEditados.some((c) => c.id === id)) {
       setClientesEditados([...clientesEditados, clienteEditado]);
     }
   };
@@ -53,7 +57,7 @@ function GestionClientes() {
       }
       setClientesEditados([]); // Limpiar la lista de clientes editados después de guardar
       setModalMessage('Cambios guardados con éxito');
-      setIsModalOpen(true);  // Mostrar el modal de éxito
+      setIsModalOpen(true); // Mostrar el modal de éxito
 
       // Cerrar el modal y redirigir después de 2 segundos
       setTimeout(() => {
@@ -62,8 +66,17 @@ function GestionClientes() {
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
       setModalMessage('Hubo un error al guardar los cambios.');
-      setIsModalOpen(true);  // Mostrar el modal de error
+      setIsModalOpen(true); // Mostrar el modal de error
     }
+  };
+
+  // Funciones para manejar la paginación
+  const handleNextPage = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 1) setPage(page - 1);
   };
 
   return (
@@ -103,9 +116,7 @@ function GestionClientes() {
               <td>
                 <select
                   value={cliente.es_aval ? 'Sí' : 'No'}
-                  onChange={(e) =>
-                    handleEsAvalChange(cliente.id, e.target.value === 'Sí')
-                  }
+                  onChange={(e) => handleEsAvalChange(cliente.id, e.target.value === 'Sí')}
                 >
                   <option value="Sí">Sí</option>
                   <option value="No">No</option>
@@ -116,11 +127,24 @@ function GestionClientes() {
           ))}
         </tbody>
       </table>
-      
+
+      {/* Botones de paginación */}
+      <div className="pagination-controls">
+        <button onClick={handlePreviousPage} disabled={page === 1}>
+          Anterior
+        </button>
+        <span>
+          Página {page} de {totalPages}
+        </span>
+        <button onClick={handleNextPage} disabled={page === totalPages}>
+          Siguiente
+        </button>
+      </div>
+
       <button className="save-button" onClick={handleGuardarCambios}>
         Guardar cambios
       </button>
-      
+
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
         Regresar al Dashboard
       </button>

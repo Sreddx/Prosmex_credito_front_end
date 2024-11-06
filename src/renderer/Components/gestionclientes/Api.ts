@@ -2,11 +2,17 @@ import apiClient from '../../utils/apiClient';
 import { Cliente, CreateClienteResponse, ErrorResponse } from '../../types';
 
 // Listar todos los clientes
-export const listClientes = async (): Promise<Cliente[] | ErrorResponse> => {
+export const listClientes = async (page = 1, per_page = 10): Promise<Cliente[] | ErrorResponse> => {
   try {
-    const response = await apiClient.get<{ data: Cliente[] }>('/clientes/');
+    const response = await apiClient.get<{
+      data: Cliente[];
+      page: number;
+      per_page: number;
+      total_pages: number;
+    }>('/clientes/', { params: { page, per_page } });
+
     console.log(response);
-    return Array.isArray(response.data.data) ? response.data.data : []; // Asegúrate de devolver el array 'data'
+    return response.data.data;
   } catch (error: any) {
     return { error: error.response?.data?.message || 'Error fetching clients' };
   }

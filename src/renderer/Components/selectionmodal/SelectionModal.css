@@ -1,0 +1,34 @@
+.modal-list-item-button {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-list-item-button:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.selected-item-button {
+  background-color: #f0f8ff; /* Light blue background */
+  border: 1px solid #007bff; /* Blue border */
+  color: #007bff; /* Blue text */
+  padding: 8px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.selected-item-button:hover {
+  background-color: #e0f0ff; /* Slightly darker blue on hover */
+}
