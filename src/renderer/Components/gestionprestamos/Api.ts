@@ -16,11 +16,23 @@ export const createPrestamo = async (
   }
 };
 
-// Obtener lista de préstamos
-export const listPrestamos = async (): Promise<{ data: PrestamoConNombre[] } | ErrorResponse> => {
+// Obtener lista de préstamos con paginación
+export const listPrestamos = async (
+  page = 1,
+  per_page = 10,
+): Promise<
+  { prestamos: PrestamoConNombre[]; page: number; total_pages: number } | ErrorResponse
+> => {
   try {
-    const response = await apiClient.get<{ data: PrestamoConNombre[] }>('/prestamos/');
-    return response.data; // Devolvemos solo el campo 'data'
+    const response = await apiClient.get<{
+      data: {
+        prestamos: PrestamoConNombre[];
+        page: number;
+        total_pages: number;
+      };
+    }>('/prestamos/', { params: { page, per_page } });
+
+    return response.data.data; // Return the `data` field to get the nested structure directly
   } catch (error: any) {
     return { error: error.response?.data?.message || 'Error fetching loans' };
   }
