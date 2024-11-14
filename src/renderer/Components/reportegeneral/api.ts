@@ -1,8 +1,6 @@
 // api.ts
 
-import apiClient from '../../utils/apiClient'; // Adjust the path accordingly
-
-// Existing imports and interfaces...
+import apiClient from '../../utils/apiClient';
 
 export interface ReporteData {
   gerente: string;
@@ -23,14 +21,36 @@ export interface ReporteData {
   bono: number;
 }
 
-export const getReporteGeneral = async (): Promise<ReporteData[]> => {
+export interface TotalesData {
+  total_cobranza_ideal: number;
+  total_cobranza_real: number;
+  total_prestamo_real: number;
+  total_prestamo_papel: number;
+  total_numero_de_creditos: number;
+  total_bono: number;
+}
+
+// Obtener el reporte general paginado
+export const getReporteGeneral = async (
+  page = 1,
+  per_page = 10,
+): Promise<{ reporte: ReporteData[]; page: number; per_page: number; total_items: number }> => {
   try {
-    const response = await apiClient.get('/reporte/general');
-    return response.data.data.reporte; // Adjust if your response structure is different
+    const response = await apiClient.get('/reporte/general', { params: { page, per_page } });
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching reporte general:', error);
     throw error;
   }
 };
 
-// ... other API functions ...
+// Obtener los totales del reporte
+export const getTotales = async (): Promise<TotalesData> => {
+  try {
+    const response = await apiClient.get('/reporte/general/totales');
+    return response.data.data.totales;
+  } catch (error) {
+    console.error('Error fetching totales:', error);
+    throw error;
+  }
+};

@@ -1,10 +1,24 @@
+// api.ts
+import { Prestamo } from 'src/renderer/types';
 import apiClient from '../../utils/apiClient';
 
-// Función para obtener los préstamos por grupo
-export const getPrestamosByGrupo = async (grupo_id: number) => {
+export interface PrestamoData {
+  prestamos: Prestamo[];
+  page: number;
+  per_page: number;
+  total_items: number;
+  total_pages: number;
+}
+
+// Función para obtener los préstamos por grupo con paginación
+export const getPrestamosByGrupo = async (
+  grupo_id: number,
+  page = 1,
+  per_page = 10,
+): Promise<PrestamoData> => {
   try {
     const response = await apiClient.get(`/pagos/prestamos`, {
-      params: { grupo_id },
+      params: { grupo_id, page, per_page },
     });
     return response.data.data;
   } catch (error) {
@@ -12,10 +26,10 @@ export const getPrestamosByGrupo = async (grupo_id: number) => {
   }
 };
 
-// Función para agregar un nuevo pago
+// Función para agregar un nuevo pago (sin cambios)
 export const addPago = async (pagoData: { monto_pagado: number; prestamo_id: number }) => {
   try {
-    const response = await apiClient.post('/pagos/', pagoData); // Usamos el endpoint raíz para crear el pago
+    const response = await apiClient.post('/pagos/', pagoData);
     return response.data;
   } catch (error) {
     throw new Error('Error al agregar el pago');

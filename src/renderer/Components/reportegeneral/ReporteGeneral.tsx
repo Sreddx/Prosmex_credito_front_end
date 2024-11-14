@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ReporteGeneral.css';
 import * as XLSX from 'xlsx';
-import { getReporteGeneral, ReporteData } from './api';
-import { useAuth } from '../../context/AuthContext'; // Importa el contexto de autenticación con la ruta correcta
+import { getReporteGeneral, getTotales, ReporteData, TotalesData } from './api';
+import { useAuth } from '../../context/AuthContext';
 
 function ReporteGeneral() {
-  const { user } = useAuth(); // Obtiene el usuario autenticado del contexto
+  const { user } = useAuth();
   const [reporteData, setReporteData] = useState<ReporteData[]>([]);
-  const [totals, setTotals] = useState<Partial<ReporteData>>({});
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [totals, setTotals] = useState<TotalesData | null>(null);
+  const [loadingReporte, setLoadingReporte] = useState<boolean>(true);
+  const [loadingTotales, setLoadingTotales] = useState<boolean>(true);
+  const [errorReporte, setErrorReporte] = useState<string>('');
+  const [errorTotales, setErrorTotales] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [perPage] = useState<number>(10);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const navigate = useNavigate();
 
   const formatCurrency = (value: number | undefined) => {
@@ -21,58 +26,46 @@ function ReporteGeneral() {
 
   useEffect(() => {
     const fetchReporte = async () => {
+      setLoadingReporte(true);
+      setErrorReporte('');
       try {
-        const data = await getReporteGeneral();
-        setReporteData(data);
-        calculateTotals(data);
+        const {
+          reporte,
+          page: responsePage,
+          per_page,
+          total_items,
+        } = await getReporteGeneral(page, perPage);
+        setReporteData(reporte);
+        setPage(responsePage);
+        setTotalItems(total_items);
       } catch (error) {
         console.error('Error fetching reporte general:', error);
-        setError('Error al obtener el reporte general.');
+        setErrorReporte('Error al obtener el reporte general.');
       } finally {
-        setLoading(false);
+        setLoadingReporte(false);
       }
     };
 
     fetchReporte();
-  }, []);
+  }, [page, perPage]);
 
-  const calculateTotals = (data: ReporteData[]) => {
-    const totals: Partial<ReporteData> = {
-      gerente: 'TOTALES',
-      cobranza_ideal: 0,
-      cobranza_real: 0,
-      prestamo_papel: 0,
-      prestamo_real: 0,
-      numero_de_creditos: 0,
-      numero_de_prestamos: 0,
-      morosidad_monto: 0,
-      morosidad_porcentaje: null,
-      porcentaje_prestamo: null,
-      sobrante: 0,
-      bono: 0,
+  useEffect(() => {
+    const fetchTotales = async () => {
+      setLoadingTotales(true);
+      setErrorTotales('');
+      try {
+        const data = await getTotales();
+        setTotals(data);
+      } catch (error) {
+        console.error('Error fetching totales:', error);
+        setErrorTotales('Error al obtener los totales.');
+      } finally {
+        setLoadingTotales(false);
+      }
     };
 
-    data.forEach((row) => {
-      totals.cobranza_ideal! += row.cobranza_ideal || 0;
-      totals.cobranza_real! += row.cobranza_real || 0;
-      totals.prestamo_papel! += row.prestamo_papel || 0;
-      totals.prestamo_real! += row.prestamo_real || 0;
-      totals.numero_de_creditos! += row.numero_de_creditos || 0;
-      totals.numero_de_prestamos! += row.numero_de_prestamos || 0;
-      totals.morosidad_monto! += row.morosidad_monto || 0;
-      totals.sobrante! += row.sobrante || 0;
-      totals.bono! += row.bono || 0;
-    });
-
-    totals.morosidad_porcentaje = totals.cobranza_ideal
-      ? totals.morosidad_monto! / totals.cobranza_ideal
-      : null;
-    totals.porcentaje_prestamo = totals.prestamo_real
-      ? totals.cobranza_real! / totals.prestamo_real
-      : null;
-
-    setTotals(totals);
-  };
+    fetchTotales();
+  }, []);
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(reporteData);
@@ -81,18 +74,22 @@ function ReporteGeneral() {
     XLSX.writeFile(wb, 'ReporteGeneral.xlsx');
   };
 
-  if (loading) {
-    return <div>Cargando reporte...</div>;
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  if (loadingReporte || loadingTotales) {
+    return <div className="loading">Cargando reporte y totales...</div>;
   }
 
-  if (error) {
-    return <div>{error}</div>;
+  if (errorReporte) {
+    return <div>{errorReporte}</div>;
   }
 
   return (
     <div className="reporte-general-container">
       <h1>Reporte General</h1>
-      {user?.rol_id === 6 && ( // Verifica si el usuario tiene el rol de "Admin" (rol_id === 6)
+      {user?.rol_id === 6 && (
         <button onClick={exportToExcel} className="export-button">
           Exportar a Excel
         </button>
@@ -151,34 +148,39 @@ function ReporteGeneral() {
               <td>{formatCurrency(row.sobrante)}</td>
             </tr>
           ))}
-          <tr>
-            <td>{totals.gerente}</td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>{formatCurrency(totals.cobranza_ideal)}</td>
-            <td>{formatCurrency(totals.cobranza_real)}</td>
-            <td>{formatCurrency(totals.prestamo_papel)}</td>
-            <td>{formatCurrency(totals.prestamo_real)}</td>
-            <td>{totals.numero_de_creditos}</td>
-            <td>{totals.numero_de_prestamos}</td>
-            <td>{formatCurrency(totals.morosidad_monto)}</td>
-            <td>
-              {totals.morosidad_porcentaje !== null
-                ? `${(totals.morosidad_porcentaje * 100).toFixed(2)}%`
-                : 'N/A'}
-            </td>
-            <td>{formatCurrency(totals.bono)}</td>
-            <td>
-              {totals.porcentaje_prestamo !== null
-                ? `${(totals.porcentaje_prestamo * 100).toFixed(2)}%`
-                : 'N/A'}
-            </td>
-            <td>{formatCurrency(totals.sobrante)}</td>
-          </tr>
+          {totals && (
+            <tr>
+              <td>TOTALES</td>
+              <td colSpan={4} />
+              <td>{formatCurrency(totals.total_cobranza_ideal)}</td>
+              <td>{formatCurrency(totals.total_cobranza_real)}</td>
+              <td>{formatCurrency(totals.total_prestamo_papel)}</td>
+              <td>{formatCurrency(totals.total_prestamo_real)}</td>
+              <td>{totals.total_numero_de_creditos}</td>
+              <td />
+              <td />
+              <td />
+              <td>{formatCurrency(totals.total_bono)}</td>
+              <td />
+              <td />
+            </tr>
+          )}
         </tbody>
       </table>
+      <div className="pagination-controls">
+        <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
+          Anterior
+        </button>
+        <span>
+          Página {page} de {Math.ceil(totalItems / perPage)}
+        </span>
+        <button
+          disabled={page === Math.ceil(totalItems / perPage)}
+          onClick={() => handlePageChange(page + 1)}
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
   );
 }

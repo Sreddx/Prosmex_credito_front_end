@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DetalleGrupo.css';
+import { Prestamo } from 'src/renderer/types';
 import { getPrestamosByGrupo, addPago } from './api';
+
 import ModalAlertas from '../modalAlertas/ModalAlertas';
 
 function DetalleGrupo() {
@@ -9,11 +11,15 @@ function DetalleGrupo() {
   const navigate = useNavigate();
 
   const [prestamos, setPrestamos] = useState<Prestamo[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [nuevoPago, setNuevoPago] = useState<{ [key: number]: string }>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState<string>('');
+
+  const perPage = 10;
 
   const formatCurrency = (value: number | undefined) => {
     return value !== undefined
@@ -24,8 +30,10 @@ function DetalleGrupo() {
   useEffect(() => {
     const fetchPrestamosGrupo = async () => {
       try {
-        const data = await getPrestamosByGrupo(Number(grupo_id));
+        setLoading(true);
+        const data = await getPrestamosByGrupo(Number(grupo_id), page, perPage);
         setPrestamos(data.prestamos);
+        setTotalPages(data.total_pages);
         setLoading(false);
       } catch (err) {
         setError('Error al obtener los préstamos del grupo');
@@ -34,7 +42,7 @@ function DetalleGrupo() {
     };
 
     fetchPrestamosGrupo();
-  }, [grupo_id]);
+  }, [grupo_id, page]);
 
   const handleRowClick = (prestamo_id: number) => {
     navigate(`/detalle-prestamo/${prestamo_id}`);
@@ -48,19 +56,18 @@ function DetalleGrupo() {
     try {
       const monto_pagado = parseFloat(nuevoPago[prestamo_id]);
       if (isNaN(monto_pagado) || monto_pagado <= 0) {
-        setModalMessage("Ingresa un monto válido para el pago");
+        setModalMessage('Ingresa un monto válido para el pago');
         setIsModalOpen(true);
         return;
       }
-      
+
       await addPago({ prestamo_id, monto_pagado });
       setModalMessage('Pago agregado exitosamente');
       setIsModalOpen(true);
-      
-      // Recargar datos del grupo después de agregar el pago
-      const data = await getPrestamosByGrupo(Number(grupo_id));
+
+      const data = await getPrestamosByGrupo(Number(grupo_id), page, perPage);
       setPrestamos(data.prestamos);
-      
+
       setNuevoPago({ ...nuevoPago, [prestamo_id]: '' });
     } catch (err) {
       setModalMessage('Error al agregar el pago');
@@ -70,6 +77,18 @@ function DetalleGrupo() {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const goToNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
   };
 
   if (loading) {
@@ -99,7 +118,11 @@ function DetalleGrupo() {
         </thead>
         <tbody>
           {prestamos.map((prestamo, index) => (
-            <tr key={index} className="clickable-row" onClick={() => handleRowClick(prestamo.prestamo_id)}>
+            <tr
+              key={index}
+              className="clickable-row"
+              onClick={() => handleRowClick(prestamo.prestamo_id)}
+            >
               <td>{prestamo.CLIENTE}</td>
               <td>{prestamo.AVAL}</td>
               <td>{prestamo.FECHA_PRÉSTAMO}</td>
@@ -117,7 +140,13 @@ function DetalleGrupo() {
                 />
               </td>
               <td>
-                <button className="guardar-button" onClick={(e) => { e.stopPropagation(); handleAgregarPago(prestamo.prestamo_id); }}>
+                <button
+                  className="guardar-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAgregarPago(prestamo.prestamo_id);
+                  }}
+                >
                   Agregar Pago
                 </button>
               </td>
@@ -125,6 +154,18 @@ function DetalleGrupo() {
           ))}
         </tbody>
       </table>
+
+      <div className="pagination-controls">
+        <button onClick={goToPreviousPage} disabled={page === 1}>
+          Anterior
+        </button>
+        <span>
+          Página {page} de {totalPages}
+        </span>
+        <button onClick={goToNextPage} disabled={page === totalPages}>
+          Siguiente
+        </button>
+      </div>
 
       <button className="back-button" onClick={() => navigate('/dashboard')}>
         Regresar al Dashboard
