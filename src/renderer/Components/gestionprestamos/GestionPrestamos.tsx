@@ -88,9 +88,10 @@ function GestionPrestamos() {
     };
     try {
       const response = await createPrestamo(nuevoPrestamo);
+      console.log('Create Prestamo Response:', response);
 
       // Check if response has a status code of 201, indicating success
-      if (response && response.status === 201) {
+      if (response?.status === 201 || response?.data?.message === 'Prestamo created successfully') {
         setModalMessage('Préstamo creado con éxito');
         setIsModalOpen(true);
 

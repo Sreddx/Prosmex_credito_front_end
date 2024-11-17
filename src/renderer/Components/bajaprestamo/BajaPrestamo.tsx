@@ -4,7 +4,7 @@ import apiClient from '../../utils/apiClient';
 import './BajaPrestamo.css';
 
 function BajaPrestamo() {
-  const [prestamos, setPrestamos] = useState([]);
+  const [prestamos, setPrestamos] = useState([]); // Asegúrate de inicializar como arreglo
   const [selectedPrestamo, setSelectedPrestamo] = useState('');
   const navigate = useNavigate();
 
@@ -12,7 +12,9 @@ function BajaPrestamo() {
     const fetchPrestamos = async () => {
       try {
         const response = await apiClient.get('/prestamos/');
-        setPrestamos(response.data.data); // Acceder a 'data' en la respuesta
+        console.log('Prestamos response:', response); // Verifica la estructura de la respuesta
+        const prestamosData = response.data?.data?.prestamos || []; // Maneja casos en los que 'data' sea undefined
+        setPrestamos(prestamosData);
       } catch (error) {
         console.error('Error al obtener préstamos:', error);
       }
@@ -47,11 +49,12 @@ function BajaPrestamo() {
           required
         >
           <option value="">Seleccione un Préstamo</option>
-          {prestamos.map((prestamo) => (
-            <option key={prestamo.prestamo_id} value={prestamo.prestamo_id}>
-              ID: {prestamo.prestamo_id}, Cliente: {prestamo.cliente_nombre}
-            </option>
-          ))}
+          {Array.isArray(prestamos) &&
+            prestamos.map((prestamo) => (
+              <option key={prestamo.prestamo_id} value={prestamo.prestamo_id}>
+                ID: {prestamo.prestamo_id}, Cliente: {prestamo.cliente_nombre}
+              </option>
+            ))}
         </select>
         <button type="submit">Eliminar Préstamo</button>
       </form>

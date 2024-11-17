@@ -96,7 +96,7 @@ function GestionClientes() {
             <th>Estado Civil</th>
             <th>Número de Hijos</th>
             <th>Propiedad</th>
-            <th>Es Aval</th>
+            {/*<th>Es Aval</th>*/}
             <th>Grupo ID</th>
           </tr>
         </thead>
@@ -113,15 +113,17 @@ function GestionClientes() {
               <td>{cliente.estado_civil}</td>
               <td>{cliente.num_hijos}</td>
               <td>{cliente.propiedad}</td>
-              <td>
-                <select
-                  value={cliente.es_aval ? 'Sí' : 'No'}
-                  onChange={(e) => handleEsAvalChange(cliente.id, e.target.value === 'Sí')}
-                >
-                  <option value="Sí">Sí</option>
-                  <option value="No">No</option>
-                </select>
-              </td>
+              {/* 
+                            <td>
+                              <select
+                                value={cliente.es_aval ? 'Sí' : 'No'}
+                                onChange={(e) => handleEsAvalChange(cliente.id, e.target.value === 'Sí')}
+                              >
+                                <option value="Sí">Sí</option>
+                                <option value="No">No</option>
+                              </select>
+                            </td>
+              */}
               <td>{cliente.grupo_id}</td>
             </tr>
           ))}
@@ -141,9 +143,10 @@ function GestionClientes() {
         </button>
       </div>
 
-      <button className="save-button" onClick={handleGuardarCambios}>
+      {/* Botón para guardar cambios */}
+      {/*<button className="save-button" onClick={handleGuardarCambios}>
         Guardar cambios
-      </button>
+      </button>*/}
 
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
         Regresar al Dashboard
