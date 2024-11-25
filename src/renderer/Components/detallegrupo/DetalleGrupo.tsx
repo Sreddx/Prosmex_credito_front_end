@@ -112,6 +112,7 @@ function DetalleGrupo() {
             <th>TIPO</th>
             <th># de Pagos</th>
             <th>Semanas que debe</th>
+            <th>COBRANZA IDEAL SEMANAL</th>
             <th>MONTO PAGO</th>
             <th>Acción</th>
           </tr>
@@ -130,6 +131,7 @@ function DetalleGrupo() {
               <td>{prestamo.TIPO_PRESTAMO}</td>
               <td>{prestamo.NUMERO_PAGOS}</td>
               <td>{prestamo.SEMANAS_QUE_DEBE}</td>
+              <td>{formatCurrency(prestamo.COBRANZA_IDEAL_SEMANAL)}</td>
               <td>
                 <input
                   type="text"
