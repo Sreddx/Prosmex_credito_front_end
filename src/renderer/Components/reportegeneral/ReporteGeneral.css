@@ -38,3 +38,8 @@
   background-color: #ccc;
   transition: background-color 0.1s ease;
 }
+
+.totals-row {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}

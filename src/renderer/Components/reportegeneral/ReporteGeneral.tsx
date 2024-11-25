@@ -149,20 +149,26 @@ function ReporteGeneral() {
             </tr>
           ))}
           {totals && (
-            <tr>
+            <tr className="totals-row">
               <td>TOTALES</td>
               <td colSpan={4} />
               <td>{formatCurrency(totals.total_cobranza_ideal)}</td>
               <td>{formatCurrency(totals.total_cobranza_real)}</td>
-              <td>{formatCurrency(totals.total_prestamo_papel)}</td>
-              <td>{formatCurrency(totals.total_prestamo_real)}</td>
+              <td>{formatCurrency(parseFloat(totals.total_prestamo_papel))}</td>
+              <td>{formatCurrency(parseFloat(totals.total_prestamo_real))}</td>
               <td>{totals.total_numero_de_creditos}</td>
-              <td />
-              <td />
-              <td />
+              <td>{totals.total_numero_de_prestamos}</td>
+              <td>{formatCurrency(totals.morosidad_monto)}</td>
+              <td>
+                {totals.morosidad_porcentaje !== null
+                  ? `${totals.morosidad_porcentaje.toFixed(2)}%`
+                  : 'N/A'}
+              </td>
               <td>{formatCurrency(totals.total_bono)}</td>
-              <td />
-              <td />
+              <td>
+                {totals.porcentaje_prestamo !== null ? `${totals.porcentaje_prestamo}%` : 'N/A'}
+              </td>
+              <td>{formatCurrency(parseFloat(totals.sobrante))}</td>
             </tr>
           )}
         </tbody>
