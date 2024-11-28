@@ -157,7 +157,7 @@ function ReporteGeneral() {
               <td>{formatCurrency(parseFloat(totals.total_prestamo_papel))}</td>
               <td>{formatCurrency(parseFloat(totals.total_prestamo_real))}</td>
               <td>{totals.total_numero_de_creditos}</td>
-              <td>{totals.total_numero_de_prestamos}</td>
+              <td>{totals.total_prestamos_activos}</td>
               <td>{formatCurrency(totals.morosidad_monto)}</td>
               <td>
                 {totals.morosidad_porcentaje !== null

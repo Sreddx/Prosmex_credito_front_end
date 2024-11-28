@@ -22,6 +22,8 @@ export interface ReporteData {
 }
 
 export interface TotalesData {
+  morosidad_monto: number | undefined;
+  total_prestamos_activos: number;
   total_cobranza_ideal: number;
   total_cobranza_real: number;
   total_prestamo_real: number;
