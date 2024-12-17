@@ -109,9 +109,12 @@ function DetalleGrupo() {
             <th>AVAL</th>
             <th>FECHA DE PRÉSTAMO</th>
             <th>MONTO PRÉSTAMO</th>
+            <th>MONTO A PAGAR</th>
             <th>TIPO</th>
-            <th># de Pagos</th>
-            <th>Semanas que debe</th>
+            <th># DE PAGOS</th>
+            <th>SEMANAS QUE DEBE</th>
+            <th>ES RENOVACION</th>
+            <th>COMPLETADO</th>
             <th>COBRANZA IDEAL SEMANAL</th>
             <th>MONTO PAGO</th>
             <th>Acción</th>
@@ -122,21 +125,24 @@ function DetalleGrupo() {
             <tr
               key={index}
               className="clickable-row"
-              onClick={() => handleRowClick(prestamo.prestamo_id)}
+              onClick={() => handleRowClick(prestamo.PRESTAMO_ID)}
             >
               <td>{prestamo.CLIENTE}</td>
               <td>{prestamo.AVAL}</td>
               <td>{prestamo.FECHA_PRÉSTAMO}</td>
               <td>{formatCurrency(prestamo.MONTO_PRÉSTAMO)}</td>
+              <td>{formatCurrency(prestamo.MONTO_UTILIDAD)}</td>
               <td>{prestamo.TIPO_PRESTAMO}</td>
               <td>{prestamo.NUMERO_PAGOS}</td>
               <td>{prestamo.SEMANAS_QUE_DEBE}</td>
+              <td>{prestamo.RENOVACION ? 'Sí' : 'No'}</td>
+              <td>{prestamo.COMPLETADO ? 'Sí' : 'No'}</td>
               <td>{formatCurrency(prestamo.COBRANZA_IDEAL_SEMANAL)}</td>
               <td>
                 <input
                   type="text"
-                  value={nuevoPago[prestamo.prestamo_id] || ''}
-                  onChange={(e) => handlePagoChange(e, prestamo.prestamo_id)}
+                  value={nuevoPago[prestamo.PRESTAMO_ID] || ''}
+                  onChange={(e) => handlePagoChange(e, prestamo.PRESTAMO_ID)}
                   placeholder="Monto del pago"
                   onClick={(e) => e.stopPropagation()}
                 />
@@ -146,7 +152,7 @@ function DetalleGrupo() {
                   className="guardar-button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleAgregarPago(prestamo.prestamo_id);
+                    handleAgregarPago(prestamo.PRESTAMO_ID);
                   }}
                 >
                   Agregar Pago

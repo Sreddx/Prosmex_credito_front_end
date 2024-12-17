@@ -148,7 +148,7 @@ function ReporteGeneral() {
               <td>{formatCurrency(row.sobrante)}</td>
             </tr>
           ))}
-          {totals && (
+          {/*totals && (
             <tr className="totals-row">
               <td>TOTALES</td>
               <td colSpan={4} />
@@ -170,7 +170,7 @@ function ReporteGeneral() {
               </td>
               <td>{formatCurrency(parseFloat(totals.sobrante))}</td>
             </tr>
-          )}
+                )*/}
         </tbody>
       </table>
       <div className="pagination-controls">
