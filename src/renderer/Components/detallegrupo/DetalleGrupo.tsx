@@ -108,10 +108,13 @@ function DetalleGrupo() {
             <th>CLIENTE</th>
             <th>AVAL</th>
             <th>FECHA DE PRÉSTAMO</th>
-            <th>MONTO PRÉSTAMO</th>
-            <th>MONTO A PAGAR</th>
-            <th>TIPO</th>
-            <th># DE PAGOS</th>
+            <th>MONTO PRÉSTAMO (PAPEL)</th>
+            <th>MONTO PRÉSTAMO (REAL)</th>
+            <th>MONTO PAGADO</th>
+            <th>MONTO TOTAL A PAGAR</th>
+            <th>MONTO RESTANTE A PAGAR</th>
+            <th>TIPO DE PRESTAMO</th>
+            <th>SEMANAS COMPLETAS</th>
             <th>SEMANAS QUE DEBE</th>
             <th>ES RENOVACION</th>
             <th>COMPLETADO</th>
@@ -131,7 +134,10 @@ function DetalleGrupo() {
               <td>{prestamo.AVAL}</td>
               <td>{prestamo.FECHA_PRÉSTAMO}</td>
               <td>{formatCurrency(prestamo.MONTO_PRÉSTAMO)}</td>
+              <td>{formatCurrency(prestamo.MONTO_PRÉSTAMO_REAL)}</td>
+              <td>{formatCurrency(prestamo.MONTO_PAGADO)}</td>
               <td>{formatCurrency(prestamo.MONTO_UTILIDAD)}</td>
+              <td>{formatCurrency(prestamo.MONTO_UTILIDAD - prestamo.MONTO_PAGADO)}</td>
               <td>{prestamo.TIPO_PRESTAMO}</td>
               <td>{prestamo.NUMERO_PAGOS}</td>
               <td>{prestamo.SEMANAS_QUE_DEBE}</td>
