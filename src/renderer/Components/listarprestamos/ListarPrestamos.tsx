@@ -28,6 +28,12 @@ function ListarPrestamos() {
     }
   };
 
+  const formatCurrency = (value: number | undefined) => {
+    return value !== undefined
+      ? new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value)
+      : 'N/A';
+  };
+
   useEffect(() => {
     fetchPrestamos(currentPage);
   }, [currentPage]);
@@ -39,24 +45,38 @@ function ListarPrestamos() {
       <table className="listar-prestamos-table">
         <thead>
           <tr>
-            <th>ID Préstamo</th>
-            <th>Cliente</th>
-            <th>Fecha de Inicio</th>
-            <th>Monto</th>
-            <th>Aval</th>
-            <th>Tipo de Préstamo</th>
+            <th>CLIENTE</th>
+            <th>AVAL</th>
+            <th>FECHA DE PRÉSTAMO</th>
+            <th>MONTO PRÉSTAMO (PAPEL)</th>
+            <th>MONTO PRÉSTAMO (REAL)</th>
+            <th>MONTO PAGADO</th>
+            <th>MONTO TOTAL A PAGAR</th>
+            <th>MONTO RESTANTE A PAGAR</th>
+            <th>TIPO DE PRÉSTAMO</th>
+            <th>SEMANAS COMPLETAS</th>
+            <th>SEMANAS QUE DEBE</th>
+            <th>ES RENOVACION</th>
+            <th>COMPLETADO</th>
           </tr>
         </thead>
         <tbody>
           {prestamos && prestamos.length > 0 ? (
             prestamos.map((prestamo) => (
               <tr key={prestamo.prestamo_id}>
-                <td>{prestamo.prestamo_id}</td>
                 <td>{prestamo.cliente_nombre}</td>
-                <td>{new Date(prestamo.fecha_inicio).toLocaleDateString()}</td>
-                <td>{prestamo.monto_prestamo}</td>
                 <td>{prestamo.aval_nombre}</td>
+                <td>{new Date(prestamo.fecha_inicio).toLocaleDateString()}</td>
+                <td>{formatCurrency(prestamo.monto_prestamo)}</td>
+                <td>{formatCurrency(prestamo.monto_prestamo_real)}</td>
+                <td>{formatCurrency(prestamo.monto_pagado)}</td>
+                <td>{formatCurrency(prestamo.monto_utilidad)}</td>
+                <td>{formatCurrency(prestamo.monto_utilidad - prestamo.monto_pagado)}</td>
                 <td>{prestamo.tipo_prestamo_nombre}</td>
+                <td>{prestamo.numero_pagos}</td>
+                <td>{prestamo.semanas_que_debe}</td>
+                <td>{prestamo.renovacion ? 'Sí' : 'No'}</td>
+                <td>{prestamo.completado ? 'Sí' : 'No'}</td>
               </tr>
             ))
           ) : (

@@ -113,7 +113,7 @@ function DetalleGrupo() {
             <th>MONTO PAGADO</th>
             <th>MONTO TOTAL A PAGAR</th>
             <th>MONTO RESTANTE A PAGAR</th>
-            <th>TIPO DE PRESTAMO</th>
+            <th>TIPO DE PRÉSTAMO</th>
             <th>SEMANAS COMPLETAS</th>
             <th>SEMANAS QUE DEBE</th>
             <th>ES RENOVACION</th>

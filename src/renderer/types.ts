@@ -69,7 +69,14 @@ export interface PrestamoConNombre {
   cliente_id: number;
   cliente_nombre: string;
   fecha_inicio: string;
-  monto_prestamo: string;
+  monto_prestamo: number;
+  monto_prestamo_real: number;
+  monto_pagado: number;
+  monto_utilidad: number;
+  numero_pagos: number;
+  semanas_que_debe: number;
+  renovacion: boolean;
+  completado: boolean;
   aval_id: number;
   aval_nombre: string;
   tipo_prestamo_id: number;
