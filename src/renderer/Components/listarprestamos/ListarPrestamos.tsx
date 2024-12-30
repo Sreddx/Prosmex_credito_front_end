@@ -66,7 +66,7 @@ function ListarPrestamos() {
               <tr key={prestamo.prestamo_id}>
                 <td>{prestamo.cliente_nombre}</td>
                 <td>{prestamo.aval_nombre}</td>
-                <td>{new Date(prestamo.fecha_inicio).toLocaleDateString()}</td>
+                <td>{prestamo.fecha_inicio}</td>
                 <td>{formatCurrency(prestamo.monto_prestamo)}</td>
                 <td>{formatCurrency(prestamo.monto_prestamo_real)}</td>
                 <td>{formatCurrency(prestamo.monto_pagado)}</td>
