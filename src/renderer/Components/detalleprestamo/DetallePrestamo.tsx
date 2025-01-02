@@ -79,11 +79,13 @@ function DetallePrestamo() {
 
   const guardarCambios = async () => {
     try {
-      const formattedPago = {
-        prestamo_id: Number(prestamo_id),
-        monto_pagado: parseFloat(nuevoPago.montoPago),
-      };
-      await addPago(formattedPago);
+      const formattedPago = [
+        {
+          prestamo_id: Number(prestamo_id),
+          monto_pagado: parseFloat(nuevoPago.montoPago),
+        },
+      ];
+      await addPago(formattedPago); // Enviar como array
 
       setModalMessage('Pago agregado exitosamente');
       setIsModalOpen(true);

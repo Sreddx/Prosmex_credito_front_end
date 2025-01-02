@@ -61,7 +61,8 @@ function DetalleGrupo() {
         return;
       }
 
-      await addPago({ prestamo_id, monto_pagado });
+      const pagoData = [{ prestamo_id, monto_pagado }];
+      await addPago(pagoData); // Enviar como array
       setModalMessage('Pago agregado exitosamente');
       setIsModalOpen(true);
 
@@ -120,7 +121,7 @@ function DetalleGrupo() {
             <th>COMPLETADO</th>
             <th>COBRANZA IDEAL SEMANAL</th>
             <th>MONTO PAGO</th>
-            <th>Acción</th>
+            <th>ACCIÓN</th>
           </tr>
         </thead>
         <tbody>
