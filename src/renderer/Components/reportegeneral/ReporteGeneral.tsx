@@ -106,8 +106,8 @@ function ReporteGeneral() {
             <th>COB REAL</th>
             <th>PRESTAMO PAPEL</th>
             <th>PRESTAMO REAL</th>
-            <th>NUMERO DE CREDITOS</th>
-            <th>NUMERO DE PRESTAMOS</th>
+            <th>NUMERO DE CREDITOS (TOTAL)</th>
+            <th>NUMERO DE PRESTAMOS (SEMANA)</th>
             <th>MOROSIDAD $$$</th>
             <th>MOROSIDAD %</th>
             <th>BONO</th>
@@ -132,7 +132,7 @@ function ReporteGeneral() {
               <td>{formatCurrency(row.prestamo_papel)}</td>
               <td>{formatCurrency(row.prestamo_real)}</td>
               <td>{row.numero_de_creditos || '0'}</td>
-              <td>{row.numero_de_prestamos || '0'}</td>
+              <td>{row.prestamos_activos || '0'}</td>
               <td>{formatCurrency(row.morosidad_monto)}</td>
               <td>
                 {row.morosidad_porcentaje !== null
