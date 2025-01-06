@@ -18,6 +18,7 @@ export interface ReporteData {
   morosidad_porcentaje: number;
   porcentaje_prestamo: number | null;
   sobrante: number;
+  sobrante_logico: number;
   bono: number;
 }
 
