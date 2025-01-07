@@ -55,7 +55,7 @@ function Corte() {
   };
 
   const calcularCorteTotal = () => {
-    return sobranteCobranza - calcularTotal() - bono + montoSemilla;
+    return sobranteCobranza - calcularTotal() + montoSemilla;
   };
 
   const handleGuardarCorte = async () => {
@@ -144,10 +144,6 @@ function Corte() {
 
       <div className="sobrante-cobranza">
         <strong>Sobrante de Cobranza:</strong> ${sobranteCobranza.toFixed(2)}
-      </div>
-
-      <div className="corte-bono">
-        <strong>Bono:</strong> ${bono.toFixed(2)}
       </div>
 
       <div className="semilla-input">
