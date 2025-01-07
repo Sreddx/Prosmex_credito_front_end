@@ -31,6 +31,7 @@ export interface TotalesData {
   total_prestamo_papel: number;
   total_numero_de_creditos: number;
   total_bono: number;
+  total_sobrante_logico: number;
 }
 
 // Obtener el reporte general paginado

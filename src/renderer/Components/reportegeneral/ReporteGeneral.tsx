@@ -145,7 +145,7 @@ function ReporteGeneral() {
                   ? `${(row.porcentaje_prestamo * 100).toFixed(2)}%`
                   : 'N/A'}
               </td>
-              <td>{formatCurrency(row.sobrante)}</td>
+              <td>{formatCurrency(row.sobrante_logico)}</td>
             </tr>
           ))}
           {totals && (
@@ -168,7 +168,7 @@ function ReporteGeneral() {
               <td>
                 {totals.porcentaje_prestamo !== null ? `${totals.porcentaje_prestamo}%` : 'N/A'}
               </td>
-              <td>{formatCurrency(parseFloat(totals.sobrante))}</td>
+              <td>{formatCurrency(parseFloat(totals.total_sobrante_logico))}</td>
             </tr>
                 )}
         </tbody>
