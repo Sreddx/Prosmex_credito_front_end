@@ -1,6 +1,6 @@
 .listar-prestamos-container {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   padding: 20px;
   text-align: center;
 }
@@ -8,7 +8,7 @@
 .listar-prestamos-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin: 20px auto; /* Centramos la tabla */
 }
 
 .listar-prestamos-table th,

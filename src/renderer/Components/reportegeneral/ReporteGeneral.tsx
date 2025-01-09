@@ -150,8 +150,7 @@ function ReporteGeneral() {
           ))}
           {totals && (
             <tr className="totals-row">
-              <td>TOTALES</td>
-              <td colSpan={4} />
+              <td colSpan={5}>TOTALES</td>
               <td>{formatCurrency(totals.total_cobranza_ideal)}</td>
               <td>{formatCurrency(totals.total_cobranza_real)}</td>
               <td>{formatCurrency(parseFloat(totals.total_prestamo_papel))}</td>

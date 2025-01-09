@@ -1,6 +1,6 @@
 .detalle-grupo-container {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 100%; /* Asegura que ocupe todo el ancho disponible */
+  margin: 0; /* Elimina márgenes innecesarios */
   padding: 20px;
   text-align: center;
 }
@@ -8,7 +8,7 @@
 .detalle-grupo-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin: 20px auto; /* Centra la tabla horizontalmente */
 }
 
 .detalle-grupo-table th,
