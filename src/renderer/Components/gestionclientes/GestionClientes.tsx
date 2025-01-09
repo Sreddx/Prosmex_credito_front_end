@@ -81,27 +81,27 @@ function GestionClientes() {
 
   return (
     <div className="gestion-clientes-container">
-      <h1>Listado de Clientes</h1>
-      {error && <p className="error">{error}</p>}
-      <table className="gestion-clientes-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido Paterno</th>
-            <th>Apellido Materno</th>
-            <th>Colonia</th>
-            <th>Código Postal</th>
-            <th>Código INE</th>
-            <th>Estado Civil</th>
-            <th>Número de Hijos</th>
-            <th>Propiedad</th>
-            {/*<th>Es Aval</th>*/}
-            <th>Grupo ID</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clientes.map((cliente) => (
+    <h1>Listado de Clientes</h1>
+    {error && <p className="error">{error}</p>}
+    <table className="gestion-clientes-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido Paterno</th>
+          <th>Apellido Materno</th>
+          <th>Colonia</th>
+          <th>Código Postal</th>
+          <th>Código INE</th>
+          <th>Estado Civil</th>
+          <th>Número de Hijos</th>
+          <th>Propiedad</th>
+          <th>Grupo ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {clientes.length > 0 ? (
+          clientes.map((cliente) => (
             <tr key={cliente.id}>
               <td>{cliente.id}</td>
               <td>{cliente.nombre}</td>
@@ -113,52 +113,39 @@ function GestionClientes() {
               <td>{cliente.estado_civil}</td>
               <td>{cliente.num_hijos}</td>
               <td>{cliente.propiedad}</td>
-              {/* 
-                            <td>
-                              <select
-                                value={cliente.es_aval ? 'Sí' : 'No'}
-                                onChange={(e) => handleEsAvalChange(cliente.id, e.target.value === 'Sí')}
-                              >
-                                <option value="Sí">Sí</option>
-                                <option value="No">No</option>
-                              </select>
-                            </td>
-              */}
               <td>{cliente.grupo_id}</td>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={11}>No se encontraron clientes</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
 
-      {/* Botones de paginación */}
-      <div className="pagination-controls">
-        <button onClick={handlePreviousPage} disabled={page === 1}>
-          Anterior
-        </button>
-        <span>
-          Página {page} de {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={page === totalPages}>
-          Siguiente
-        </button>
-      </div>
-
-      {/* Botón para guardar cambios */}
-      {/*<button className="save-button" onClick={handleGuardarCambios}>
-        Guardar cambios
-      </button>*/}
-
-      <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
-        Regresar al Dashboard
+    <div className="pagination-controls">
+      <button onClick={handlePreviousPage} disabled={page === 1}>
+        Anterior
       </button>
-
-      {/* Modal de confirmación */}
-      <ModalAlertas
-        message={modalMessage}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <span>
+        Página {page} de {totalPages}
+      </span>
+      <button onClick={handleNextPage} disabled={page === totalPages}>
+        Siguiente
+      </button>
     </div>
+
+    <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
+      Regresar al Dashboard
+    </button>
+
+    <ModalAlertas
+      message={modalMessage}
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+    />
+  </div>
   );
 }
 
