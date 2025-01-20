@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchRoles, registerUser } from './api'; // Importar funciones de la API
+import { fetchRoles, registerUser } from './Api'; // Importar funciones de la API
 import './CreacionUsuario.css';
 
 interface Rol {

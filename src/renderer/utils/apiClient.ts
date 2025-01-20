@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const backendUrl = 'http://127.0.0.1:5000';
+//Make it dynamic with var env
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
 
 const apiClient = axios.create({
   baseURL: backendUrl,
