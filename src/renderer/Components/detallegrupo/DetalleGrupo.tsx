@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './DetalleGrupo.css';
 import { Prestamo } from 'src/renderer/types';
 import { getPrestamosByGrupo, addPago } from './api';
-
 import ModalAlertas from '../modalAlertas/ModalAlertas';
 
 function DetalleGrupo() {
@@ -49,7 +48,6 @@ function DetalleGrupo() {
   };
 
   const handleRenovarPrestamo = (prestamo: Prestamo) => {
-    console.log('Renovar prestamo', prestamo);
     navigate('/gestion-prestamos', {
       state: {
         cliente_id: prestamo.CLIENTE_ID,
@@ -139,7 +137,11 @@ function DetalleGrupo() {
         </thead>
         <tbody>
           {prestamos.map((prestamo, index) => (
-            <tr key={index}>
+            <tr
+              key={index}
+              className="clickable-row"
+              onClick={() => handleRowClick(prestamo.PRESTAMO_ID)}
+            >
               <td>{prestamo.CLIENTE}</td>
               <td>{prestamo.AVAL}</td>
               <td>{prestamo.FECHA_PRÉSTAMO}</td>
@@ -160,25 +162,19 @@ function DetalleGrupo() {
                   value={nuevoPago[prestamo.PRESTAMO_ID] || ''}
                   onChange={(e) => handlePagoChange(e, prestamo.PRESTAMO_ID)}
                   placeholder="Monto del pago"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()} // Detener la propagación del evento
                 />
               </td>
-              <td>
+              <td onClick={(e) => e.stopPropagation()}>
                 <button
                   className="guardar-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAgregarPago(prestamo.PRESTAMO_ID);
-                  }}
+                  onClick={() => handleAgregarPago(prestamo.PRESTAMO_ID)}
                 >
                   Agregar Pago
                 </button>
                 <button
                   className="guardar-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRenovarPrestamo(prestamo);
-                  }}
+                  onClick={() => handleRenovarPrestamo(prestamo)}
                 >
                   Renovar Préstamo
                 </button>
