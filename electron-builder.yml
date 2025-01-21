@@ -3,8 +3,11 @@ appId: 'Prosmex.Output.ReactElectron'
 copyright: 'Copyright © 2022 StackOutput'
 artifactName: '${productName}-${version}.${ext}'
 
-# Package electron code into a asar archive. Set to false to debug issues.
+# Package electron code into an asar archive. Set to false to debug issues.
 asar: true
+asarUnpack:
+  - '**/*.node' # Desempaqueta archivos nativos de Node.js
+  - '**/assets/**' # Desempaqueta la carpeta de recursos si es necesario
 
 files:
   - 'dist/'
@@ -14,7 +17,6 @@ extraResources:
   - './assets/**'
 
 directories:
-  app: 'app'
   buildResources: 'assets'
   output: 'release/build'
 
@@ -24,42 +26,30 @@ win:
   target:
     - 'zip'
     - 'nsis'
-    # - 'appx' #For Windows Store build
+    # - 'appx' # For Windows Store build
 
 # Configuration for the Windows Installer
 nsis:
   oneClick: false
-  allowToChangeInstallationDirectory: false
+  allowToChangeInstallationDirectory: true
   installerIcon: './assets/icono-prosmex.ico'
   uninstallerIcon: './assets/icono-prosmex.ico'
   uninstallDisplayName: 'ProsmexApp'
   license: './LICENSE'
-  # perMachine: true # Per Machine Configuration
+  perMachine: true # Install for all users
 
 # Config for the Windows Store Build
 # appx:
-# identityName: 'yourApp'
-# publisher: 'yourName'
-# publisherDisplayName: 'yourName'
+#   identityName: 'yourApp'
+#   publisher: 'yourName'
+#   publisherDisplayName: 'yourName'
 
 # Mac OS Configuration
 mac:
   icon: './assets/icon.icns'
   target:
-    - 'mas'
     - 'dmg'
-  type: 'distribution'
   category: 'public.app-category.productivity'
-  hardenedRuntime: true
-  gatekeeperAssess: false
-  entitlements: './assets/entitlements.mac.plist'
-  entitlementsInherit: './assets/entitlements.mac.plist'
-
-# Mac Store Build
-mas:
-  icon: './assets/icon.icns'
-  type: 'distribution'
-  category: 'public.app-category.utilities'
   hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: './assets/entitlements.mac.plist'
@@ -82,11 +72,10 @@ linux:
     - 'AppImage'
     - 'deb'
     - 'snap'
-  maintainer: 'AJAY'
-  packageCategory: 'Utility'
-  category: Utility
+  maintainer: 'Sebastian'
+  category: 'Utility'
 
 publish:
   provider: 'github'
-  owner: 'AjayKanniyappan'
+  owner: 'Sebastian'
   repo: 'react-electron-template'

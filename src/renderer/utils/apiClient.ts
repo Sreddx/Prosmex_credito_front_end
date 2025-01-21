@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-//Make it dynamic with var env
-const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+const backendUrl = 'https://20embig7nh.execute-api.us-east-1.amazonaws.com/dev';
 
 const apiClient = axios.create({
   baseURL: backendUrl,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+const backendUrl = 'https://20embig7nh.execute-api.us-east-1.amazonaws.com/dev';
 
 // eslint-disable-next-line import/prefer-default-export
 export const loginApi = async (usuario: string, password: string) => {
