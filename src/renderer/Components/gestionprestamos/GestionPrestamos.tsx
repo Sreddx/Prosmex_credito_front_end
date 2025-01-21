@@ -1,34 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Prestamo } from '../../types';
 import { createPrestamo, listTiposPrestamo, listAvales, listClientesRegistroPrestamo } from './Api';
 import './GestionPrestamos.css';
 import ModalAlertas from '../modalAlertas/ModalAlertas';
-import PaginatedDropDown from '../paginateddropdown/PaginatedDropDown';
 import SelectionModal from '../selectionmodal/SelectionModal';
 
 function GestionPrestamos() {
-  const [clienteId, setClienteId] = useState('');
-  const [selectedClienteName, setSelectedClienteName] = useState('');
-  const [fechaInicio, setFechaInicio] = useState('');
-  const [montoPrestamo, setMontoPrestamo] = useState(0);
-  const [tipoPrestamoId, setTipoPrestamoId] = useState('');
-  const [avalId, setAvalId] = useState('');
-  const [selectedAvalName, setSelectedAvalName] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const prestamoRenovacion = location.state as Partial<Prestamo> | undefined;
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  };
+
+  const [clienteId, setClienteId] = useState<string>(prestamoRenovacion?.cliente_id?.toString() || '');
+  const [selectedClienteName, setSelectedClienteName] = useState<string>('');
+  const [fechaInicio, setFechaInicio] = useState<string>(prestamoRenovacion ? getCurrentDate() : '');
+  const [montoPrestamo, setMontoPrestamo] = useState<number>(prestamoRenovacion?.monto_prestamo || 0);
+  const [tipoPrestamoId, setTipoPrestamoId] = useState<string>(
+    prestamoRenovacion?.tipo_prestamo_id?.toString() || '',
+  );
+  const [avalId, setAvalId] = useState<string>(prestamoRenovacion?.aval_id?.toString() || '');
+  const [selectedAvalName, setSelectedAvalName] = useState<string>('');
   const [tiposPrestamo, setTiposPrestamo] = useState<
     { nombre: string; tipo_prestamo_id: number }[]
   >([]);
-  const [avales, setAvales] = useState<{ id: number; nombre: string }[]>([]);
   const [clientes, setClientes] = useState<{ id: number; nombre: string }[]>([]);
-  const [clientesPage, setClientesPage] = useState(1);
-  const [clientesTotalPages, setClientesTotalPages] = useState(1);
-  const [avalesPage, setAvalesPage] = useState(1);
-  const [avalesTotalPages, setAvalesTotalPages] = useState(1);
-  const [isClientesModalOpen, setIsClientesModalOpen] = useState(false);
-  const [isAvalesModalOpen, setIsAvalesModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [clientesPage, setClientesPage] = useState<number>(1);
+  const [clientesTotalPages, setClientesTotalPages] = useState<number>(1);
+  const [avales, setAvales] = useState<{ id: number; nombre: string }[]>([]);
+  const [avalesPage, setAvalesPage] = useState<number>(1);
+  const [avalesTotalPages, setAvalesTotalPages] = useState<number>(1);
+  const [isClientesModalOpen, setIsClientesModalOpen] = useState<boolean>(false);
+  const [isAvalesModalOpen, setIsAvalesModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const fetchClientes = async (page: number) => {
     const response = await listClientesRegistroPrestamo(page);
@@ -65,20 +74,43 @@ function GestionPrestamos() {
     fetchTiposPrestamo();
   }, [clientesPage, avalesPage]);
 
+  useEffect(() => {
+    if (prestamoRenovacion) {
+      const cliente = clientes.find((c) => c.id === Number(prestamoRenovacion.cliente_id));
+      const aval = avales.find((a) => a.id === Number(prestamoRenovacion.aval_id));
+      const tipoPrestamo = tiposPrestamo.find(
+        (t) => t.tipo_prestamo_id === prestamoRenovacion.tipo_prestamo_id,
+      );
+
+      console.log(clientes);
+      //console.log(prestamoRenovacion);
+      console.log('cliente:', prestamoRenovacion.cliente_id);
+      console.log('aval:', prestamoRenovacion.aval_id);
+      console.log('tipoPrestamo:', prestamoRenovacion.tipo_prestamo_id);
+      console.log('fechaInicio:', prestamoRenovacion.fecha_inicio);
+      console.log('montoPrestamo:', prestamoRenovacion.monto_prestamo);
+
+      if (cliente) setSelectedClienteName(cliente.nombre);
+      if (aval) setSelectedAvalName(aval.nombre);
+      if (tipoPrestamo) setTipoPrestamoId(tipoPrestamo.tipo_prestamo_id.toString());
+    }
+  }, [clientes, avales, tiposPrestamo, prestamoRenovacion]);
+
   const handleClienteSelect = (cliente: { id: number; nombre: string }) => {
-    setClienteId(String(cliente.id));
+    setClienteId(cliente.id.toString());
     setSelectedClienteName(cliente.nombre);
     setIsClientesModalOpen(false);
   };
 
   const handleAvalSelect = (aval: { id: number; nombre: string }) => {
-    setAvalId(String(aval.id));
+    setAvalId(aval.id.toString());
     setSelectedAvalName(aval.nombre);
     setIsAvalesModalOpen(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const nuevoPrestamo: Prestamo = {
       cliente_id: Number(clienteId),
       fecha_inicio: fechaInicio,
@@ -86,22 +118,19 @@ function GestionPrestamos() {
       tipo_prestamo_id: Number(tipoPrestamoId),
       aval_id: Number(avalId),
     };
+
     try {
       const response = await createPrestamo(nuevoPrestamo);
-      console.log('Create Prestamo Response:', response);
 
-      // Check if response has a status code of 201, indicating success
       if (response?.status === 201 || response?.data?.message === 'Prestamo created successfully') {
         setModalMessage('Préstamo creado con éxito');
         setIsModalOpen(true);
 
-        // Cerrar el modal y redirigir al Dashboard después de 2 segundos
         setTimeout(() => {
           setIsModalOpen(false);
           navigate('/dashboard');
         }, 2000);
       } else {
-        // If response does not indicate success, show an error message
         setModalMessage('Error al crear el préstamo.');
         setIsModalOpen(true);
       }
@@ -115,7 +144,7 @@ function GestionPrestamos() {
   return (
     <div className="gestion-prestamos-form-container">
       <form onSubmit={handleSubmit} className="gestion-prestamos-form">
-        <h1>Crear Préstamo</h1>
+        <h1>{prestamoRenovacion ? 'Renovar Préstamo' : 'Crear Préstamo'}</h1>
 
         <label htmlFor="clienteId">
           Cliente
@@ -170,7 +199,7 @@ function GestionPrestamos() {
           </button>
         </label>
 
-        <button type="submit">Crear Préstamo</button>
+        <button type="submit">{prestamoRenovacion ? 'Renovar Préstamo' : 'Crear Préstamo'}</button>
       </form>
 
       <button type="button" onClick={() => navigate('/dashboard')} className="back-button">
@@ -183,7 +212,6 @@ function GestionPrestamos() {
         onClose={() => setIsModalOpen(false)}
       />
 
-      {/* Modals for selection */}
       <SelectionModal
         isOpen={isClientesModalOpen}
         title="Seleccione un cliente"

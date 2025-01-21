@@ -48,6 +48,19 @@ function DetalleGrupo() {
     navigate(`/detalle-prestamo/${prestamo_id}`);
   };
 
+  const handleRenovarPrestamo = (prestamo: Prestamo) => {
+    console.log('Renovar prestamo', prestamo);
+    navigate('/gestion-prestamos', {
+      state: {
+        cliente_id: prestamo.CLIENTE_ID,
+        fecha_inicio: prestamo.FECHA_PRÉSTAMO,
+        monto_prestamo: prestamo.MONTO_PRÉSTAMO,
+        tipo_prestamo_id: prestamo.TIPO_PRESTAMO_ID,
+        aval_id: prestamo.AVAL_ID,
+      },
+    });
+  };
+
   const handlePagoChange = (e: React.ChangeEvent<HTMLInputElement>, prestamo_id: number) => {
     setNuevoPago({ ...nuevoPago, [prestamo_id]: e.target.value });
   };
@@ -126,11 +139,7 @@ function DetalleGrupo() {
         </thead>
         <tbody>
           {prestamos.map((prestamo, index) => (
-            <tr
-              key={index}
-              className="clickable-row"
-              onClick={() => handleRowClick(prestamo.PRESTAMO_ID)}
-            >
+            <tr key={index}>
               <td>{prestamo.CLIENTE}</td>
               <td>{prestamo.AVAL}</td>
               <td>{prestamo.FECHA_PRÉSTAMO}</td>
@@ -163,6 +172,15 @@ function DetalleGrupo() {
                   }}
                 >
                   Agregar Pago
+                </button>
+                <button
+                  className="guardar-button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRenovarPrestamo(prestamo);
+                  }}
+                >
+                  Renovar Préstamo
                 </button>
               </td>
             </tr>
