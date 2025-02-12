@@ -1,5 +1,5 @@
 // api.ts
-import { Prestamo } from 'src/renderer/types';
+import { Prestamo, PrestamoRenovacion } from 'src/renderer/types';
 import apiClient from '../../utils/apiClient';
 
 export interface PrestamoData {
@@ -23,6 +23,30 @@ export const getPrestamosByGrupo = async (
     return response.data.data;
   } catch (error) {
     throw new Error('Error al obtener los préstamos del grupo');
+  }
+};
+
+// Función para obtener prestamo especifico
+export const getPrestamoById = async (prestamo_id: number): Promise<PrestamoRenovacion> => {
+  try {
+    const response = await apiClient.get(`/prestamos/${prestamo_id}`);
+    const { data } = response.data;
+
+    // Convert fields as needed:
+    const prestamoRenovacion: PrestamoRenovacion = {
+      prestamo_id: data.prestamo_id,
+      cliente_id: data.cliente_id,
+      // Convert the date string into the format you want (YYYY-MM-DD)
+      fecha_inicio: new Date(data.fecha_inicio).toISOString().split('T')[0],
+      // Ensure numeric values are numbers
+      monto_prestamo: Number(data.monto_prestamo),
+      tipo_prestamo_id: data.tipo_prestamo_id,
+      aval_id: data.aval_id,
+    };
+
+    return prestamoRenovacion;
+  } catch (error) {
+    throw new Error('Error al obtener el préstamo');
   }
 };
 

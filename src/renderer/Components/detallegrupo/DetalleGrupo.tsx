@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DetalleGrupo.css';
 import { Prestamo } from 'src/renderer/types';
-import { getPrestamosByGrupo, addPago } from './api';
+import { getPrestamosByGrupo, getPrestamoById, addPago } from './api';
 import ModalAlertas from '../modalAlertas/ModalAlertas';
 
 function DetalleGrupo() {
@@ -46,15 +46,61 @@ function DetalleGrupo() {
   const handleRowClick = (prestamo_id: number) => {
     navigate(`/detalle-prestamo/${prestamo_id}`);
   };
+  const fetchPrestamoById = async (prestamo_id: number) => {
+    try {
+      const prestamo = await getPrestamoById(prestamo_id);
 
-  const handleRenovarPrestamo = (prestamo: Prestamo) => {
+      return prestamo;
+    } catch (err) {
+      console.error('Error al obtener el préstamo:', err);
+    }
+  };
+  const handleRenovarPrestamo = async (prestamo_id: number) => {
+    try {
+      const prestamoSeleccionado = await fetchPrestamoById(prestamo_id);
+
+      if (!prestamoSeleccionado) {
+        setModalMessage('Error al obtener el préstamo');
+        setIsModalOpen(true);
+        return;
+      }
+      if (prestamoSeleccionado.semana_activa <= 8) {
+        setModalMessage('No puedes renovar un préstamo que esta en la semaana 8 o menos');
+        setIsModalOpen(true);
+        return;
+      }
+      navigate('/gestion-prestamos', {
+        state: {
+          cliente_id: prestamoSeleccionado.cliente_id,
+          fecha_inicio: new Date().toISOString().split('T')[0], // Fecha actual
+          monto_prestamo: prestamoSeleccionado.monto_prestamo,
+          tipo_prestamo_id: prestamoSeleccionado.tipo_prestamo_id,
+          aval_id: prestamoSeleccionado.aval_id,
+        },
+      });
+    } catch (err) {
+      setModalMessage('Error al obtener el préstamo');
+      setIsModalOpen(true);
+    }
+    const prestamoSeleccionado = await fetchPrestamoById(prestamo_id);
+
+    if (!prestamoSeleccionado) {
+      setModalMessage('Error al obtener el préstamo');
+      setIsModalOpen(true);
+      return;
+    }
+    if (prestamoSeleccionado.semana_activa <= 8) {
+      setModalMessage('No puedes renovar un préstamo que esta en la semaana 8 o menos');
+      setIsModalOpen(true);
+      return;
+    }
     navigate('/gestion-prestamos', {
       state: {
-        cliente_id: prestamo.CLIENTE_ID,
-        fecha_inicio: prestamo.FECHA_PRÉSTAMO,
-        monto_prestamo: prestamo.MONTO_PRÉSTAMO,
-        tipo_prestamo_id: prestamo.TIPO_PRESTAMO_ID,
-        aval_id: prestamo.AVAL_ID,
+        cliente_id: prestamoSeleccionado.cliente_id,
+        fecha_inicio: new Date().toISOString().split('T')[0], // Fecha actual
+        monto_prestamo: prestamoSeleccionado.monto_prestamo,
+        tipo_prestamo_id: prestamoSeleccionado.tipo_prestamo_id,
+        aval_id: prestamoSeleccionado.aval_id,
       },
     });
   };
@@ -174,7 +220,7 @@ function DetalleGrupo() {
                 </button>
                 <button
                   className="guardar-button"
-                  onClick={() => handleRenovarPrestamo(prestamo)}
+                  onClick={() => handleRenovarPrestamo(prestamo.PRESTAMO_ID)}
                 >
                   Renovar Préstamo
                 </button>

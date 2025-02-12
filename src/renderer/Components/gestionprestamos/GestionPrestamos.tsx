@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Prestamo } from '../../types';
+import { PrestamoRenovacion } from '../../types';
 import { createPrestamo, listTiposPrestamo, listAvales, listClientesRegistroPrestamo } from './Api';
-import './GestionPrestamos.css';
 import ModalAlertas from '../modalAlertas/ModalAlertas';
 import SelectionModal from '../selectionmodal/SelectionModal';
+import './GestionPrestamos.css';
 
-function GestionPrestamos() {
+const GestionPrestamos: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const prestamoRenovacion = location.state as Partial<Prestamo> | undefined;
+  // If data was passed via navigate (from the renovar flow), it is read here.
+  const prestamoRenovacion = location.state as Partial<PrestamoRenovacion> | undefined;
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  };
+  const getCurrentDate = () => new Date().toISOString().split('T')[0];
 
-  const [clienteId, setClienteId] = useState<string>(prestamoRenovacion?.cliente_id?.toString() || '');
+  // Initialize state using passed values if available, otherwise use defaults.
+  const [clienteId, setClienteId] = useState<string>(
+    prestamoRenovacion?.cliente_id?.toString() || '',
+  );
   const [selectedClienteName, setSelectedClienteName] = useState<string>('');
-  const [fechaInicio, setFechaInicio] = useState<string>(prestamoRenovacion ? getCurrentDate() : '');
-  const [montoPrestamo, setMontoPrestamo] = useState<number>(prestamoRenovacion?.monto_prestamo || 0);
+  const [fechaInicio, setFechaInicio] = useState<string>(
+    prestamoRenovacion?.fecha_inicio || getCurrentDate(),
+  );
+  const [montoPrestamo, setMontoPrestamo] = useState<number>(
+    prestamoRenovacion?.monto_prestamo || 0,
+  );
   const [tipoPrestamoId, setTipoPrestamoId] = useState<string>(
     prestamoRenovacion?.tipo_prestamo_id?.toString() || '',
   );
@@ -39,6 +44,7 @@ function GestionPrestamos() {
   const [modalMessage, setModalMessage] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  // Fetch lists for selection
   const fetchClientes = async (page: number) => {
     const response = await listClientesRegistroPrestamo(page);
     if ('error' in response) {
@@ -74,6 +80,7 @@ function GestionPrestamos() {
     fetchTiposPrestamo();
   }, [clientesPage, avalesPage]);
 
+  // When the lists are loaded, update the pre-selected names if data was passed in.
   useEffect(() => {
     if (prestamoRenovacion) {
       const cliente = clientes.find((c) => c.id === Number(prestamoRenovacion.cliente_id));
@@ -81,14 +88,6 @@ function GestionPrestamos() {
       const tipoPrestamo = tiposPrestamo.find(
         (t) => t.tipo_prestamo_id === prestamoRenovacion.tipo_prestamo_id,
       );
-
-      console.log(clientes);
-      //console.log(prestamoRenovacion);
-      console.log('cliente:', prestamoRenovacion.cliente_id);
-      console.log('aval:', prestamoRenovacion.aval_id);
-      console.log('tipoPrestamo:', prestamoRenovacion.tipo_prestamo_id);
-      console.log('fechaInicio:', prestamoRenovacion.fecha_inicio);
-      console.log('montoPrestamo:', prestamoRenovacion.monto_prestamo);
 
       if (cliente) setSelectedClienteName(cliente.nombre);
       if (aval) setSelectedAvalName(aval.nombre);
@@ -110,8 +109,7 @@ function GestionPrestamos() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const nuevoPrestamo: Prestamo = {
+    const nuevoPrestamo = {
       cliente_id: Number(clienteId),
       fecha_inicio: fechaInicio,
       monto_prestamo: montoPrestamo,
@@ -125,7 +123,6 @@ function GestionPrestamos() {
       if (response?.status === 201 || response?.data?.message === 'Prestamo created successfully') {
         setModalMessage('Préstamo creado con éxito');
         setIsModalOpen(true);
-
         setTimeout(() => {
           setIsModalOpen(false);
           navigate('/dashboard');
@@ -239,6 +236,6 @@ function GestionPrestamos() {
       />
     </div>
   );
-}
+};
 
 export default GestionPrestamos;
