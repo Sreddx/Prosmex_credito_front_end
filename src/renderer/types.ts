@@ -100,3 +100,14 @@ export interface CreatePrestamoResponse {
   message: string; // Mensaje de éxito
   prestamo: number; // ID del préstamo creado
 }
+
+// Define the interface for the renewal flow
+export interface PrestamoRenovacion {
+  prestamo_id: number;
+  cliente_id: number;
+  fecha_inicio: string; // YYYY-MM-DD format
+  monto_prestamo: number;
+  tipo_prestamo_id: number;
+  aval_id: number;
+  // You can add more fields if needed for your flow
+}
